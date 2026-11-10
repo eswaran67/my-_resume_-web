@@ -19,7 +19,7 @@ export interface ExperienceItem {
 export interface ProjectItem {
   id: string;
   title: string;
-  category: "Systems & Cloud" | "Web Apps" | "Mobile" | "Security";
+  category: "CCTV & Surveillance" | "Hardware & Systems" | "Networking & IT";
   tagline: string;
   description: string;
   tags: string[];
@@ -178,82 +178,43 @@ export const portfolioData = {
 
   projects: [
     {
-      id: "surveillance-fleet-nvr",
-      title: "All-Brand CCTV & IP Surveillance Grid",
-      category: "Security" as const,
-      tagline: "Commercial HD IP & Analog Surveillance Across All Major Brands",
+      id: "enterprise-cctv-nvr-surveillance",
+      title: "Enterprise CCTV & NVR Surveillance Deployment",
+      category: "CCTV & Surveillance" as const,
+      tagline: "Commercial Multi-Channel IP & Analog Surveillance Architecture",
       description:
-        "Comprehensive surveillance deployment involving all-brand CCTV & IP cameras (Hikvision, CP Plus, Dahua, Honeywell & more), PoE managed switches, multi-channel NVR/DVR configuration, RAID storage arrays, and secure remote viewing client setups for commercial and industrial facilities.",
-      tags: ["All-Brand CCTV", "IP Cameras", "NVR/DVR Setup", "PoE Switches", "Network Storage"],
-      githubUrl: "https://github.com/eswaran-dev/surveillance-fleet-nvr",
-      liveUrl: "https://github.com/eswaran-dev/surveillance-fleet-nvr",
+        "Deployed and configured multi-channel IP security cameras, NVR network video recorders, and CMOS system setups for comprehensive office surveillance and live monitoring.",
+      tags: ["Hikvision NVR", "IP Cameras", "Coaxial/Cat6 Wiring", "Motion Detection Setup"],
+      githubUrl: "#enterprise-cctv-nvr-surveillance",
+      liveUrl: "#enterprise-cctv-nvr-surveillance",
       featured: true,
-      metrics: "32+ IP Feeds Synchronized",
+      metrics: "32+ IP Feeds Live",
     },
     {
-      id: "structured-cabling-rack",
-      title: "Enterprise T568B Cabling & Server Rack Fabric",
-      category: "Systems & Cloud" as const,
-      tagline: "Clean Structured Cabling, Patch Panel Terminations & Rack Infrastructure",
+      id: "high-performance-custom-pc-builds",
+      title: "High-Performance Custom PC Workstation Builds",
+      category: "Hardware & Systems" as const,
+      tagline: "Custom Workstation Engineering & Precision Multimeter Diagnostics",
       description:
-        "Full-cycle networking infrastructure overhaul featuring certified T568B RJ45 cabling, cable management trays, patch panel terminations, gigabit uplink testing, and biometric access integration across multiple service departments.",
-      tags: ["T568B RJ45", "Structured Cabling", "LAN/WAN", "Patch Panels", "Biometrics"],
-      githubUrl: "https://github.com/eswaran-dev/structured-cabling-rack",
-      liveUrl: "https://github.com/eswaran-dev/structured-cabling-rack",
-      featured: true,
-      metrics: "100% Signal Integrity Certified",
-    },
-    {
-      id: "custom-workstation-rigs",
-      title: "High-Compute Custom PC Workstations",
-      category: "Systems & Cloud" as const,
-      tagline: "Custom High-Performance Desktop Rigs & Thermal Engineering",
-      description:
-        "Specification, assembly, and testing of high-performance desktop workstation PCs. Tailored hardware component pairing, thermal stress-testing, BIOS optimization, and multimeter power delivery verification.",
-      tags: ["PC Assembly", "Hardware Diagnostics", "Multimeter Testing", "BIOS/CMOS", "Thermal Tuning"],
-      githubUrl: "https://github.com/eswaran-dev/custom-workstation-rigs",
-      liveUrl: "https://github.com/eswaran-dev/custom-workstation-rigs",
+        "Assembled and tested custom desktop workstations and server rigs with advanced component-level troubleshooting, precise BIOS configuration, and multimeter diagnostics.",
+      tags: ["Hardware Assembly", "SMPS Testing", "Thermal Management", "BIOS Setup"],
+      githubUrl: "#high-performance-custom-pc-builds",
+      liveUrl: "#high-performance-custom-pc-builds",
       featured: true,
       metrics: "Sub-0.1% Failure Rate",
     },
     {
-      id: "cloudnet-sentinel",
-      title: "CloudNet Sentinel - Network Telemetry",
-      category: "Web Apps" as const,
-      tagline: "Real-Time Distributed Network Observability & Port Status Dashboard",
+      id: "structured-cabling-enterprise-networking",
+      title: "Structured Cabling & Enterprise Networking Setup",
+      category: "Networking & IT" as const,
+      tagline: "Certified T568B Structured Cabling & Rack Patch Panel Fabric",
       description:
-        "A network monitoring suite with Next.js 15, Tailwind CSS, and WebSockets providing live visual feedback for IP camera streams, switch port uptime, and automated outage alerting.",
-      tags: ["Next.js 15", "Tailwind CSS", "JavaScript", "WebSockets", "Node.js"],
-      githubUrl: "https://github.com/eswaran-dev/cloudnet-sentinel",
-      liveUrl: "https://cloudnet-sentinel.demo.dev",
-      featured: false,
-      metrics: "< 15ms Latency",
-    },
-    {
-      id: "aurapay-android",
-      title: "AuraPay Mobile Biometric Client",
-      category: "Mobile" as const,
-      tagline: "Native Android App with Hardware Biometrics & Offline Cache",
-      description:
-        "A responsive native Android application built with Kotlin and Jetpack Compose incorporating biometric authentication, Room DB offline synchronization, and material glassmorphism UI.",
-      tags: ["Kotlin", "Jetpack Compose", "Biometrics", "Room DB", "Android SDK"],
-      githubUrl: "https://github.com/eswaran-dev/aurapay-android",
-      liveUrl: "https://github.com/eswaran-dev/aurapay-android/releases",
-      featured: false,
-      metrics: "60 FPS Fluid",
-    },
-    {
-      id: "biometric-logger-hub",
-      title: "BioPunch - Attendance Management Portal",
-      category: "Security" as const,
-      tagline: "Automated Biometric Punch Sync & Reporting Console",
-      description:
-        "Internal automation utility that synchronizes punch logs from fingerprint biometric attendance terminals into a unified web portal for HR time tracking and automated PDF report generation.",
-      tags: ["Biometric Terminals", "Next.js", "Node.js", "Tailwind CSS", "PostgreSQL"],
-      githubUrl: "https://github.com/eswaran-dev/biometric-logger-hub",
-      liveUrl: "https://biopunch-demo.dev",
-      featured: false,
-      metrics: "Instant Sync",
+        "Executed clean structured cabling installations using the T568B RJ45 wiring standard, punch-down blocks, LAN/WAN routing, and fingerprint biometric attendance terminal integration.",
+      tags: ["T568B RJ45 Crimping", "Biometric Punch Machines", "Network Routing", "LAN Setup"],
+      githubUrl: "#structured-cabling-enterprise-networking",
+      liveUrl: "#structured-cabling-enterprise-networking",
+      featured: true,
+      metrics: "100% Signal Certified",
     },
   ],
 };

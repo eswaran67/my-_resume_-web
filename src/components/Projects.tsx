@@ -2,27 +2,71 @@
 
 import React, { useState } from "react";
 import {
-  ExternalLink,
   Sparkles,
   FolderGit2,
   X,
   Info,
   CheckCircle2,
   Cpu,
+  ShieldCheck,
+  Server,
+  Network,
+  ArrowRight,
 } from "lucide-react";
-import { GithubIcon } from "@/components/Icons";
 import { portfolioData, ProjectItem } from "@/data/portfolioData";
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
-  const categories = ["All", "Systems & Cloud", "Web Apps", "Mobile", "Security"];
+  const categories = ["All", "CCTV & Surveillance", "Hardware & Systems", "Networking & IT"];
 
   const filteredProjects =
     activeFilter === "All"
       ? portfolioData.projects
       : portfolioData.projects.filter((p) => p.category === activeFilter);
+
+  const getProjectIcon = (category: string) => {
+    switch (category) {
+      case "CCTV & Surveillance":
+        return <ShieldCheck className="w-5 h-5 text-blue-400" />;
+      case "Hardware & Systems":
+        return <Cpu className="w-5 h-5 text-cyan-400" />;
+      case "Networking & IT":
+        return <Network className="w-5 h-5 text-purple-400" />;
+      default:
+        return <Server className="w-5 h-5 text-cyan-400" />;
+    }
+  };
+
+  const getProjectNotes = (id: string) => {
+    switch (id) {
+      case "enterprise-cctv-nvr-surveillance":
+        return [
+          "Configured multi-channel IP security cameras, NVR network video recorders, and CMOS system setups for live office monitoring.",
+          "High-definition motion detection zones, video loss alarms, and automated alert triggering across service zones.",
+          "PoE switch power budget optimization, Cat6 wiring runs, and reliable video storage retention policies.",
+        ];
+      case "high-performance-custom-pc-builds":
+        return [
+          "Precision workstation and server assembly tailored for high-compute workloads with optimal thermal airflow.",
+          "Rigorous digital multimeter testing for SMPS voltage rail stability (+12V, +5V, +3.3V) and component diagnostics.",
+          "Tailored BIOS/CMOS configuration, memory profile tuning, and preventative maintenance protocols.",
+        ];
+      case "structured-cabling-enterprise-networking":
+        return [
+          "100% compliant T568B RJ45 wiring standard crimping and terminations across patch panels and keystone jacks.",
+          "Enterprise LAN/WAN routing, managed switch deployment, and low-latency network segmentation.",
+          "Biometric fingerprint punch attendance terminal integration and automated attendance database synchronization.",
+        ];
+      default:
+        return [
+          "Component-level testing and system hardening.",
+          "Full compliance with enterprise hardware and networking standards.",
+          "Rapid on-site installation, verification, and preventative maintenance.",
+        ];
+    }
+  };
 
   return (
     <section id="projects" className="relative py-24 overflow-hidden">
@@ -35,13 +79,13 @@ export default function Projects() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
             <FolderGit2 className="w-3.5 h-3.5" />
-            <span>Featured Work &amp; Architectures</span>
+            <span>Infrastructure &amp; Engineering Deployments</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Projects <span className="text-gradient-cyan-purple">Showcase</span>
+            Featured <span className="text-gradient-cyan-purple">Projects</span>
           </h2>
           <p className="text-slate-300 text-base sm:text-lg">
-            Real-world systems, cloud orchestration tools, reactive web platforms, and mobile apps built with scalability and resilience in mind.
+            Commercial CCTV &amp; NVR surveillance deployments, high-performance custom PC workstation builds, and certified T568B structured network cabling.
           </p>
         </div>
 
@@ -75,7 +119,8 @@ export default function Projects() {
               <div>
                 {/* Header: Category Badge & Metrics */}
                 <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="text-[11px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950/70 text-cyan-400 border border-cyan-800/60 font-semibold">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-md bg-cyan-950/70 text-cyan-400 border border-cyan-800/60 font-semibold">
+                    {getProjectIcon(project.category)}
                     {project.category}
                   </span>
                   {project.metrics && (
@@ -115,36 +160,15 @@ export default function Projects() {
                   ))}
                 </div>
 
-                {/* Card Action Links */}
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white px-3 py-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 transition-all flex-1 justify-center"
-                  >
-                    <GithubIcon className="w-3.5 h-3.5 text-slate-300" />
-                    <span>Source</span>
-                  </a>
-
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300 hover:text-white px-3 py-2 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-800/60 hover:border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all flex-1 justify-center"
-                  >
-                    <span>Demo</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-cyan-400" />
-                  </a>
-
+                {/* Card Action Link */}
+                <div className="pt-2">
                   <button
                     type="button"
                     onClick={() => setSelectedProject(project)}
-                    className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-purple-500/50 text-slate-400 hover:text-purple-300 transition-all"
-                    title="View Architectural Breakdown"
-                    aria-label="View Project Architecture"
+                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-800/60 hover:border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all group/btn"
                   >
-                    <Info className="w-4 h-4" />
+                    <Info className="w-3.5 h-3.5 text-cyan-400 group-hover/btn:scale-110 transition-transform" />
+                    <span>View Technical Specifications &amp; Setup</span>
                   </button>
                 </div>
               </div>
@@ -152,7 +176,7 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* Architectural Modal */}
+        {/* Architectural / Technical Specifications Modal */}
         {selectedProject && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in"
@@ -175,7 +199,8 @@ export default function Projects() {
               </button>
 
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800">
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider px-2.5 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800">
+                  {getProjectIcon(selectedProject.category)}
                   {selectedProject.category}
                 </span>
                 {selectedProject.metrics && (
@@ -198,29 +223,23 @@ export default function Projects() {
                 <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
                   <h4 className="text-xs font-mono uppercase text-slate-400 mb-2 flex items-center gap-1.5">
                     <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-                    Engineering &amp; Architecture Notes
+                    Engineering &amp; Implementation Details
                   </h4>
-                  <ul className="space-y-1.5 text-xs text-slate-300">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                      <span>Decoupled service architecture with minimal overhead &amp; zero single-point-of-failure.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-purple-400 mt-0.5 shrink-0" />
-                      <span>Automated container health probes &amp; low-latency reactive state synchronization.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
-                      <span>Full CI/CD integration with automated regression testing on every push.</span>
-                    </li>
+                  <ul className="space-y-2 text-xs text-slate-300">
+                    {getProjectNotes(selectedProject.id).map((note, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
+                        <span>{note}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
 
-              {/* Technologies */}
+              {/* Technologies / Components */}
               <div className="mb-6">
                 <span className="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">
-                  Stack &amp; Frameworks
+                  Hardware Components &amp; Tools Used
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {selectedProject.tags.map((t) => (
@@ -236,23 +255,20 @@ export default function Projects() {
 
               {/* Actions */}
               <div className="flex items-center gap-3 pt-4 border-t border-slate-800">
-                <a
-                  href={selectedProject.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-slate-900 border border-slate-700 hover:text-white hover:border-slate-500 transition-all"
+                <button
+                  type="button"
+                  onClick={() => setSelectedProject(null)}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-700 hover:text-white hover:border-slate-500 transition-all"
                 >
-                  <GithubIcon className="w-4 h-4" />
-                  <span>GitHub Repository</span>
-                </a>
+                  <span>Close Specification</span>
+                </button>
                 <a
-                  href={selectedProject.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#contact"
+                  onClick={() => setSelectedProject(null)}
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-purple-400 hover:from-cyan-300 hover:to-purple-300 shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all"
                 >
-                  <span>Launch Live Demo</span>
-                  <ExternalLink className="w-4 h-4" />
+                  <span>Inquire for Similar Project</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
