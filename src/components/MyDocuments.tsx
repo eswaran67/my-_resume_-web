@@ -120,7 +120,18 @@ export default function MyDocuments() {
       }
     }
 
+    const handleOwnerChange = () => {
+      const pin =
+        localStorage.getItem("eswaran_owner_pin") ||
+        sessionStorage.getItem("eswaran_owner_pin");
+      setIsOwner(!!(pin && VALID_KEYS.includes(pin.toLowerCase())));
+      if (pin) setStoredPin(pin);
+    };
+
+    window.addEventListener("owner-mode-changed", handleOwnerChange);
     loadDocuments();
+
+    return () => window.removeEventListener("owner-mode-changed", handleOwnerChange);
   }, []);
 
   const loadDocuments = async () => {
@@ -152,6 +163,7 @@ export default function MyDocuments() {
       // Persist in localStorage so Eswaran stays logged in on his own device
       localStorage.setItem("eswaran_owner_pin", canonical);
       sessionStorage.setItem("eswaran_owner_pin", canonical);
+      window.dispatchEvent(new Event("owner-mode-changed"));
       setShowPinModal(false);
       setEnteredPin("");
     } else {
@@ -164,6 +176,7 @@ export default function MyDocuments() {
     setStoredPin("");
     localStorage.removeItem("eswaran_owner_pin");
     sessionStorage.removeItem("eswaran_owner_pin");
+    window.dispatchEvent(new Event("owner-mode-changed"));
   };
 
   const handleFileUpload = async (e: React.FormEvent) => {

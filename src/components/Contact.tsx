@@ -67,12 +67,15 @@ export default function Contact() {
 
   // Load latest profile data from API or localStorage
   useEffect(() => {
-    const savedPin =
-      localStorage.getItem("eswaran_owner_pin") ||
-      sessionStorage.getItem("eswaran_owner_pin");
-    if (savedPin && VALID_PINS.includes(savedPin.toLowerCase())) {
-      setIsOwner(true);
-    }
+    const checkOwner = () => {
+      const savedPin =
+        localStorage.getItem("eswaran_owner_pin") ||
+        sessionStorage.getItem("eswaran_owner_pin");
+      setIsOwner(!!(savedPin && VALID_PINS.includes(savedPin.toLowerCase())));
+    };
+
+    checkOwner();
+    window.addEventListener("owner-mode-changed", checkOwner);
 
     const loadProfile = async () => {
       try {
@@ -101,6 +104,7 @@ export default function Contact() {
     };
 
     loadProfile();
+    return () => window.removeEventListener("owner-mode-changed", checkOwner);
   }, []);
 
   const handleCopyEmail = () => {
@@ -138,6 +142,7 @@ export default function Contact() {
       setIsOwner(true);
       localStorage.setItem("eswaran_owner_pin", canonical);
       sessionStorage.setItem("eswaran_owner_pin", canonical);
+      window.dispatchEvent(new Event("owner-mode-changed"));
       setShowPinPrompt(false);
       setPinInput("");
       setShowEditModal(true);
@@ -146,8 +151,16 @@ export default function Contact() {
     }
   };
 
-  // Save updated contact info to server API and client state
-  const handleSaveContactInfo = async (e: React.FormEvent) => {
+  // Lock Owner Mode so all edit buttons disappear from view
+  const handleLockOwnerMode = () => {
+    localStorage.removeItem("eswaran_owner_pin");
+    sessionStorage.removeItem("eswaran_owner_pin");
+    setIsOwner(false);
+    window.dispatchEvent(new Event("owner-mode-changed"));
+  };
+
+  // Save updated contact info to server API and client state (with optional auto-lock)
+  const handleSaveContactInfo = async (e: React.FormEvent, autoLock = false) => {
     e.preventDefault();
     setEditSaving(true);
     setEditError("");
@@ -195,7 +208,10 @@ export default function Contact() {
       setTimeout(() => {
         setEditSuccess(false);
         setShowEditModal(false);
-      }, 1200);
+        if (autoLock) {
+          handleLockOwnerMode();
+        }
+      }, 1000);
     } catch (err: any) {
       setEditError(err.message || "An error occurred while saving.");
     } finally {
@@ -240,16 +256,26 @@ export default function Contact() {
                   <Sparkles className="w-4 h-4 text-cyan-400" />
                 </h3>
 
-                {/* Edit Button: ONLY VISIBLE TO THE OWNER (ESWARAN K) */}
+                {/* Owner Controls: ONLY VISIBLE TO THE OWNER (ESWARAN K) */}
                 {isOwner && (
-                  <button
-                    onClick={() => setShowEditModal(true)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-colors shadow-sm"
-                    title="Edit Email & Address (Owner Only)"
-                  >
-                    <Pencil className="w-3 h-3" />
-                    <span>Edit Info</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowEditModal(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-colors shadow-sm"
+                      title="Edit Email & Address"
+                    >
+                      <Pencil className="w-3 h-3" />
+                      <span>Edit Info</span>
+                    </button>
+                    <button
+                      onClick={handleLockOwnerMode}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 text-xs font-mono transition-colors"
+                      title="Lock & Hide from Visitors"
+                    >
+                      <Lock className="w-3 h-3 text-cyan-400" />
+                      <span>Lock</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -617,21 +643,32 @@ export default function Contact() {
                   </div>
                 )}
 
-                <div className="pt-3 flex gap-3">
+                <div className="pt-3 flex flex-wrap gap-2.5">
                   <button
                     type="button"
                     onClick={() => setShowEditModal(false)}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs border border-slate-800 transition-colors"
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs border border-slate-800 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
-                    type="submit"
+                    type="button"
                     disabled={editSaving}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] disabled:opacity-50 flex items-center justify-center gap-2"
+                    onClick={(e) => handleSaveContactInfo(e, false)}
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
                   >
-                    <Save className="w-4 h-4" />
-                    <span>{editSaving ? "Saving..." : "Save Live Updates"}</span>
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Save</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={editSaving}
+                    onClick={(e) => handleSaveContactInfo(e, true)}
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    title="Save changes and lock owner mode so the Edit button is completely hidden from visitors"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Save &amp; Lock</span>
                   </button>
                 </div>
               </form>
