@@ -1,0 +1,54 @@
+[
+  {
+    "id": "doc-diploma-first-class",
+    "title": "Diploma in Computer Science & Engineering Certificate",
+    "category": "Education",
+    "issuer": "Government Polytechnic College",
+    "fileUrl": "/documents/diploma-certificate.pdf",
+    "fileName": "diploma-certificate.pdf",
+    "fileSize": "1.4 MB",
+    "fileType": "application/pdf",
+    "uploadDate": "2024-05-15",
+    "verified": true,
+    "description": "Official State Board Diploma Certificate awarded with First Class distinction in Computer Science & Engineering."
+  },
+  {
+    "id": "doc-cctv-specialist",
+    "title": "All-Brand CCTV & IP Surveillance Specialist Accreditation",
+    "category": "Certifications",
+    "issuer": "Industrial Surveillance & Security Training",
+    "fileUrl": "/documents/cctv-specialist-certificate.pdf",
+    "fileName": "cctv-specialist-certificate.pdf",
+    "fileSize": "860 KB",
+    "fileType": "application/pdf",
+    "uploadDate": "2023-11-20",
+    "verified": true,
+    "description": "Professional accreditation for multi-channel IP camera deployment, NVR/DVR storage, and remote surveillance grids across all major brands."
+  },
+  {
+    "id": "doc-it-solutions-exp",
+    "title": "System Engineer Service & Experience Verification",
+    "category": "Experience",
+    "issuer": "IT Solutions Private Limited, Coimbatore",
+    "fileUrl": "/documents/it-solutions-experience-letter.pdf",
+    "fileName": "it-solutions-experience-letter.pdf",
+    "fileSize": "940 KB",
+    "fileType": "application/pdf",
+    "uploadDate": "2024-01-10",
+    "verified": true,
+    "description": "Official service and work experience certification detailing custom workstation building, T568B structured cabling, and biometric punch terminal rollouts."
+  },
+  {
+    "id": "doc-structured-cabling",
+    "title": "T568B Structured Cabling & Termination Standard",
+    "category": "Certifications",
+    "issuer": "Enterprise Cabling & Network Infrastructure",
+    "fileUrl": "/documents/structured-cabling-standard.pdf",
+    "fileName": "structured-cabling-standard.pdf",
+    "fileSize": "1.1 MB",
+    "fileType": "application/pdf",
+    "uploadDate": "2023-08-12",
+    "verified": true,
+    "description": "Certification in enterprise Cat6/Cat6A cabling standards, punch-down blocks, patch panels, and RJ45 crimping testing."
+  }
+]

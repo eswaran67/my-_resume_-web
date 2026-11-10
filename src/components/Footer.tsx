@@ -50,6 +50,9 @@ export default function Footer() {
             <a href="#projects" className="hover:text-cyan-300 transition-colors">
               Projects
             </a>
+            <a href="#documents" className="hover:text-cyan-300 transition-colors">
+              Documents
+            </a>
             <a href="#resume-section" className="hover:text-cyan-300 transition-colors">
               Resume
             </a>

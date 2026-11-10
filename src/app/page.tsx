@@ -5,6 +5,7 @@ import AboutSkills from "@/components/AboutSkills";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import Projects from "@/components/Projects";
 import ResumeSection from "@/components/ResumeSection";
+import MyDocuments from "@/components/MyDocuments";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -29,6 +30,7 @@ export default function Home() {
         <ExperienceTimeline />
         <Projects />
         <ResumeSection />
+        <MyDocuments />
         <Contact />
         <Footer />
       </div>
