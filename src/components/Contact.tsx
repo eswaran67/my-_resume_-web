@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Mail,
   Send,
@@ -12,9 +12,17 @@ import {
   MessageSquare,
   AlertCircle,
   Phone,
+  Pencil,
+  Lock,
+  X,
+  Save,
+  CheckCircle2,
+  ShieldCheck,
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon, TwitterIcon, WhatsAppIcon } from "@/components/Icons";
 import { portfolioData } from "@/data/portfolioData";
+
+const VALID_PINS = ["2026", "1234", "eswaran", "admin", "eswar"];
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -28,8 +36,75 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
+  // Dynamic Contact & Profile Info
+  const [contactInfo, setContactInfo] = useState({
+    email: portfolioData.personal.email,
+    location: portfolioData.personal.location,
+    phone: portfolioData.personal.phone,
+    whatsapp: portfolioData.personal.whatsapp,
+    github: portfolioData.personal.github,
+    linkedin: portfolioData.personal.linkedin,
+    twitter: portfolioData.personal.twitter,
+  });
+
+  // Owner Mode State
+  const [isOwner, setIsOwner] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showPinPrompt, setShowPinPrompt] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState("");
+
+  // Edit Form Fields
+  const [editEmail, setEditEmail] = useState(portfolioData.personal.email);
+  const [editLocation, setEditLocation] = useState(portfolioData.personal.location);
+  const [editPhone, setEditPhone] = useState(portfolioData.personal.phone);
+  const [editWhatsapp, setEditWhatsapp] = useState(portfolioData.personal.whatsapp);
+  const [editLinkedin, setEditLinkedin] = useState(portfolioData.personal.linkedin);
+  const [editGithub, setEditGithub] = useState(portfolioData.personal.github);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editSuccess, setEditSuccess] = useState(false);
+  const [editError, setEditError] = useState("");
+
+  // Load latest profile data from API or localStorage
+  useEffect(() => {
+    const savedPin =
+      localStorage.getItem("eswaran_owner_pin") ||
+      sessionStorage.getItem("eswaran_owner_pin");
+    if (savedPin && VALID_PINS.includes(savedPin.toLowerCase())) {
+      setIsOwner(true);
+    }
+
+    const loadProfile = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        const data = await res.json();
+        if (data.success && data.personal) {
+          setContactInfo({
+            email: data.personal.email || portfolioData.personal.email,
+            location: data.personal.location || portfolioData.personal.location,
+            phone: data.personal.phone || portfolioData.personal.phone,
+            whatsapp: data.personal.whatsapp || portfolioData.personal.whatsapp,
+            github: data.personal.github || portfolioData.personal.github,
+            linkedin: data.personal.linkedin || portfolioData.personal.linkedin,
+            twitter: data.personal.twitter || portfolioData.personal.twitter,
+          });
+          setEditEmail(data.personal.email || portfolioData.personal.email);
+          setEditLocation(data.personal.location || portfolioData.personal.location);
+          setEditPhone(data.personal.phone || portfolioData.personal.phone);
+          setEditWhatsapp(data.personal.whatsapp || portfolioData.personal.whatsapp);
+          setEditLinkedin(data.personal.linkedin || portfolioData.personal.linkedin);
+          setEditGithub(data.personal.github || portfolioData.personal.github);
+        }
+      } catch (e) {
+        // Fallback to default portfolioData
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText(portfolioData.personal.email);
+    navigator.clipboard.writeText(contactInfo.email);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 3000);
   };
@@ -44,13 +119,88 @@ export default function Contact() {
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    // Simulate sending message
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
       setTimeout(() => setSubmitStatus("idle"), 6000);
     }, 1200);
+  };
+
+  // Owner PIN Authentication for editing
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPinError("");
+
+    const normalized = pinInput.trim().toLowerCase();
+    if (VALID_PINS.includes(normalized)) {
+      const canonical = normalized === "1234" ? "1234" : "2026";
+      setIsOwner(true);
+      localStorage.setItem("eswaran_owner_pin", canonical);
+      sessionStorage.setItem("eswaran_owner_pin", canonical);
+      setShowPinPrompt(false);
+      setPinInput("");
+      setShowEditModal(true);
+    } else {
+      setPinError("Invalid Key! Use 2026 or eswaran.");
+    }
+  };
+
+  // Save updated contact info to server API and client state
+  const handleSaveContactInfo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditSaving(true);
+    setEditError("");
+
+    const pin =
+      localStorage.getItem("eswaran_owner_pin") ||
+      sessionStorage.getItem("eswaran_owner_pin") ||
+      "2026";
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-pin": pin,
+        },
+        body: JSON.stringify({
+          pin,
+          email: editEmail.trim(),
+          location: editLocation.trim(),
+          phone: editPhone.trim(),
+          whatsapp: editWhatsapp.trim(),
+          linkedin: editLinkedin.trim(),
+          github: editGithub.trim(),
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || "Failed to update contact info.");
+      }
+
+      setContactInfo({
+        email: editEmail.trim(),
+        location: editLocation.trim(),
+        phone: editPhone.trim(),
+        whatsapp: editWhatsapp.trim(),
+        linkedin: editLinkedin.trim(),
+        github: editGithub.trim(),
+        twitter: contactInfo.twitter,
+      });
+
+      setEditSuccess(true);
+      setTimeout(() => {
+        setEditSuccess(false);
+        setShowEditModal(false);
+      }, 1200);
+    } catch (err: any) {
+      setEditError(err.message || "An error occurred while saving.");
+    } finally {
+      setEditSaving(false);
+    }
   };
 
   return (
@@ -77,11 +227,31 @@ export default function Contact() {
           {/* Left Column: Direct Info & Social Connections */}
           <div className="lg:col-span-5 space-y-6">
             {/* Quick Contact Card */}
-            <div className="glass-panel p-7 rounded-2xl border border-white/10 shadow-xl space-y-6">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <span>Contact Channels</span>
-                <Sparkles className="w-4 h-4 text-cyan-400" />
-              </h3>
+            <div className="glass-panel p-7 rounded-2xl border border-white/10 shadow-xl space-y-6 relative">
+              <div className="flex items-center justify-between">
+                <h3
+                  onClick={() => {
+                    if (!isOwner) setShowPinPrompt(true);
+                  }}
+                  className="text-xl font-bold text-white flex items-center gap-2 cursor-pointer select-none"
+                  title={isOwner ? "Owner Mode Active" : "Click to authenticate as Owner"}
+                >
+                  <span>Contact Channels</span>
+                  <Sparkles className="w-4 h-4 text-cyan-400" />
+                </h3>
+
+                {/* Edit Button: ONLY VISIBLE TO THE OWNER (ESWARAN K) */}
+                {isOwner && (
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-colors shadow-sm"
+                    title="Edit Email & Address (Owner Only)"
+                  >
+                    <Pencil className="w-3 h-3" />
+                    <span>Edit Info</span>
+                  </button>
+                )}
+              </div>
 
               {/* Email One-Click Copy */}
               <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between group">
@@ -94,10 +264,10 @@ export default function Contact() {
                       Direct Email
                     </span>
                     <a
-                      href={`mailto:${portfolioData.personal.email}`}
-                      className="text-xs sm:text-sm text-slate-200 hover:text-cyan-300 transition-colors truncate block font-mono"
+                      href={`mailto:${contactInfo.email}`}
+                      className="text-xs sm:text-sm text-slate-200 hover:text-cyan-300 transition-colors truncate block font-mono font-medium"
                     >
-                      {portfolioData.personal.email}
+                      {contactInfo.email}
                     </a>
                   </div>
                 </div>
@@ -121,7 +291,7 @@ export default function Contact() {
               <div className="space-y-3 pt-2 border-t border-slate-800">
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
                   <MapPin className="w-4 h-4 text-purple-400 shrink-0" />
-                  <span>{portfolioData.personal.location}</span>
+                  <span className="font-medium text-slate-200">{contactInfo.location}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-300">
                   <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
@@ -136,7 +306,7 @@ export default function Contact() {
                 </span>
                 <div className="grid grid-cols-3 gap-3">
                   <a
-                    href={portfolioData.personal.github}
+                    href={contactInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
@@ -146,7 +316,7 @@ export default function Contact() {
                   </a>
 
                   <a
-                    href={portfolioData.personal.linkedin}
+                    href={contactInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
@@ -156,27 +326,37 @@ export default function Contact() {
                   </a>
 
                   <a
-                    href={portfolioData.personal.twitter}
+                    href={contactInfo.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-purple-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
+                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
                   >
-                    <TwitterIcon className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:scale-110 transition-transform" />
-                    <span className="text-[11px] font-mono">Twitter/X</span>
+                    <WhatsAppIcon className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-[11px] font-mono">WhatsApp</span>
                   </a>
                 </div>
               </div>
+            </div>
+
+            {/* Quick Availability Box */}
+            <div className="glass-panel p-6 rounded-2xl border border-white/5 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-mono text-slate-400">Engineering Availability</span>
+                <p className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mt-0.5">
+                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Available for On-Site &amp; Infrastructure Projects
+                </p>
+              </div>
+              <Phone className="w-5 h-5 text-cyan-400 opacity-60" />
             </div>
           </div>
 
           {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="glass-panel p-7 sm:p-9 rounded-2xl border border-white/10 shadow-2xl relative">
-              <h3 className="text-xl font-bold text-white mb-2">
-                Send a Message
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 mb-6">
-                Fill in the form below and I will respond to your inquiry promptly.
+            <div className="glass-panel p-8 sm:p-10 rounded-2xl border border-white/10 shadow-xl">
+              <h3 className="text-2xl font-bold text-white mb-2">Send a Message</h3>
+              <p className="text-slate-300 text-sm mb-6">
+                Fill in the details below and I will respond to your technical requirements promptly.
               </p>
 
               {/* Status Alert */}
@@ -223,7 +403,7 @@ export default function Contact() {
                       htmlFor="email"
                       className="block text-xs font-mono text-slate-300"
                     >
-                      Your Email <span className="text-cyan-400">*</span>
+                      Email Address <span className="text-cyan-400">*</span>
                     </label>
                     <input
                       type="email"
@@ -289,12 +469,12 @@ export default function Contact() {
                   {isSubmitting ? (
                     <>
                       <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                      <span>Transmitting...</span>
+                      <span>Sending Message...</span>
                     </>
                   ) : (
                     <>
+                      <span>Transmit Message</span>
                       <Send className="w-4 h-4" />
-                      <span>Send Message</span>
                     </>
                   )}
                 </button>
@@ -303,6 +483,233 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      {/* ============================================================ */}
+      {/* OWNER EDIT CONTACT INFO MODAL */}
+      {/* ============================================================ */}
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="glass-panel w-full max-w-lg rounded-2xl p-6 sm:p-8 border border-white/15 shadow-2xl relative my-8">
+            <button
+              onClick={() => {
+                setShowEditModal(false);
+                setEditError("");
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                <Pencil className="w-5 h-5 text-cyan-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white">Edit Contact Details</h3>
+                <p className="text-xs text-slate-400 font-mono">Owner Portal • ESWARAN K</p>
+              </div>
+            </div>
+
+            {editSuccess ? (
+              <div className="py-10 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center mx-auto text-emerald-400 animate-bounce">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                <h4 className="text-base font-bold text-white">Contact Info Updated!</h4>
+                <p className="text-xs text-slate-300">
+                  Your new email and address are saved and updated live on the website.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSaveContactInfo} className="space-y-4">
+                {/* Email Address */}
+                <div>
+                  <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                    Direct Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    placeholder="e.g. eswaran.techdev@gmail.com"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                {/* Physical Location / Address */}
+                <div>
+                  <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                    Location / Address *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editLocation}
+                    onChange={(e) => setEditLocation(e.target.value)}
+                    placeholder="e.g. Coimbatore, Tamil Nadu, India"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-cyan-400"
+                  />
+                </div>
+
+                {/* Phone Number */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      value={editPhone}
+                      onChange={(e) => setEditPhone(e.target.value)}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                      WhatsApp Link
+                    </label>
+                    <input
+                      type="text"
+                      value={editWhatsapp}
+                      onChange={(e) => setEditWhatsapp(e.target.value)}
+                      placeholder="https://wa.me/919876543210"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Social Links */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                      LinkedIn URL
+                    </label>
+                    <input
+                      type="text"
+                      value={editLinkedin}
+                      onChange={(e) => setEditLinkedin(e.target.value)}
+                      placeholder="https://linkedin.com/in/..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-slate-300 mb-1.5">
+                      GitHub URL
+                    </label>
+                    <input
+                      type="text"
+                      value={editGithub}
+                      onChange={(e) => setEditGithub(e.target.value)}
+                      placeholder="https://github.com/..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
+                    />
+                  </div>
+                </div>
+
+                {editError && (
+                  <div className="p-3 rounded-lg bg-red-950/50 border border-red-800 text-red-300 text-xs font-mono flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{editError}</span>
+                  </div>
+                )}
+
+                <div className="pt-3 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs border border-slate-800 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={editSaving}
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)] disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>{editSaving ? "Saving..." : "Save Live Updates"}</span>
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* OWNER PIN UNLOCK MODAL (IF NOT LOGGED IN YET) */}
+      {/* ============================================================ */}
+      {showPinPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+          <div className="glass-panel w-full max-w-md rounded-2xl p-6 sm:p-8 border border-white/15 shadow-2xl relative">
+            <button
+              onClick={() => {
+                setShowPinPrompt(false);
+                setPinError("");
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6 text-cyan-400" />
+            </div>
+
+            <h3 className="text-xl font-bold text-white mb-1">Owner Security Verification</h3>
+            <p className="text-xs text-slate-300 mb-6">
+              Only <strong className="text-cyan-300">ESWARAN K</strong> can edit contact channels and address.
+            </p>
+
+            <form onSubmit={handlePinSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono text-slate-300 mb-2">
+                  Security PIN / Key
+                </label>
+                <input
+                  type="text"
+                  value={pinInput}
+                  onChange={(e) => setPinInput(e.target.value)}
+                  placeholder="Enter 2026 or eswaran"
+                  maxLength={15}
+                  autoFocus
+                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                />
+                <p className="text-[11px] text-slate-400 font-mono mt-1.5 text-center">
+                  Key: <span className="text-cyan-400 font-semibold">2026</span> or <span className="text-cyan-400 font-semibold">eswaran</span>
+                </p>
+              </div>
+
+              {pinError && (
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-950/50 border border-red-800 text-red-300 text-xs font-mono">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{pinError}</span>
+                </div>
+              )}
+
+              <div className="pt-2 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPinPrompt(false)}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs border border-slate-800 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)]"
+                >
+                  Unlock &amp; Edit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

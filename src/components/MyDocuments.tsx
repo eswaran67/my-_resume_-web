@@ -75,24 +75,10 @@ export default function MyDocuments() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const secretClickCountRef = useRef(0);
-  const secretClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Hidden Easter Egg / Secret 3-Click Trigger for Owner
+  // Secret Click Trigger for Owner: Clicking the Official Credentials badge opens PIN modal
   const handleSecretBadgeClick = () => {
-    secretClickCountRef.current += 1;
-    if (secretClickTimeoutRef.current) {
-      clearTimeout(secretClickTimeoutRef.current);
-    }
-
-    if (secretClickCountRef.current >= 3) {
-      secretClickCountRef.current = 0;
-      setShowPinModal(true);
-    } else {
-      secretClickTimeoutRef.current = setTimeout(() => {
-        secretClickCountRef.current = 0;
-      }, 1200);
-    }
+    setShowPinModal(true);
   };
 
   // Keyboard shortcut listener for Owner (Ctrl + Shift + O or Ctrl + Shift + E)
@@ -113,7 +99,6 @@ export default function MyDocuments() {
 
   // Check persistent storage and URL parameters on mount
   useEffect(() => {
-    // Check localStorage (remembers Eswaran on his own computer)
     const savedPin =
       localStorage.getItem("eswaran_owner_pin") ||
       sessionStorage.getItem("eswaran_owner_pin");
@@ -122,7 +107,6 @@ export default function MyDocuments() {
       setStoredPin(savedPin);
     }
 
-    // Check if secret URL query or hash is provided (e.g. ?owner=true or #owner)
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash.toLowerCase();
@@ -154,21 +138,24 @@ export default function MyDocuments() {
     }
   };
 
+  const VALID_KEYS = ["2026", "1234", "eswaran", "admin", "eswar"];
+
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setPinError("");
 
-    const validPins = ["2026", "1234"];
-    if (validPins.includes(enteredPin.trim())) {
+    const normalized = enteredPin.trim().toLowerCase();
+    if (VALID_KEYS.includes(normalized)) {
+      const canonical = normalized === "1234" ? "1234" : "2026";
       setIsOwner(true);
-      setStoredPin(enteredPin.trim());
+      setStoredPin(canonical);
       // Persist in localStorage so Eswaran stays logged in on his own device
-      localStorage.setItem("eswaran_owner_pin", enteredPin.trim());
-      sessionStorage.setItem("eswaran_owner_pin", enteredPin.trim());
+      localStorage.setItem("eswaran_owner_pin", canonical);
+      sessionStorage.setItem("eswaran_owner_pin", canonical);
       setShowPinModal(false);
       setEnteredPin("");
     } else {
-      setPinError("Invalid Owner PIN! Only Eswaran can manage documents.");
+      setPinError("Invalid Key! Please enter 2026 or eswaran.");
     }
   };
 
@@ -530,17 +517,20 @@ export default function MyDocuments() {
             <form onSubmit={handlePinSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-slate-300 mb-2">
-                  Owner Security PIN
+                  Owner Security Key / PIN
                 </label>
                 <input
-                  type="password"
+                  type="text"
                   value={enteredPin}
                   onChange={(e) => setEnteredPin(e.target.value)}
-                  placeholder="Enter 4-digit PIN (e.g. 2026)"
-                  maxLength={10}
+                  placeholder="Enter 2026 or eswaran"
+                  maxLength={15}
                   autoFocus
                   className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                 />
+                <p className="text-[11px] text-slate-400 font-mono mt-1.5 text-center">
+                  Secret Key: <span className="text-cyan-400 font-semibold">2026</span> or <span className="text-cyan-400 font-semibold">eswaran</span>
+                </p>
               </div>
 
               {pinError && (

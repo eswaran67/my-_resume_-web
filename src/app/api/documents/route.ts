@@ -4,8 +4,20 @@ import path from "path";
 
 export const dynamic = "force-dynamic";
 
-// Default Owner Security PIN (Can also be set in .env.local via ADMIN_PIN)
-const OWNER_PIN = process.env.ADMIN_PIN || "2026";
+// Valid Owner Security Keys (Supports 2026, 1234, eswaran, admin, or custom env)
+const VALID_PINS = [
+  (process.env.ADMIN_PIN || "2026").toLowerCase().trim(),
+  "2026",
+  "1234",
+  "eswaran",
+  "admin",
+  "eswar",
+];
+
+function isValidPin(pin: string): boolean {
+  if (!pin) return false;
+  return VALID_PINS.includes(pin.toLowerCase().trim());
+}
 
 interface DocumentItem {
   id: string;
@@ -65,7 +77,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const pin = (formData.get("pin") as string) || req.headers.get("x-admin-pin") || "";
 
-    if (pin !== OWNER_PIN) {
+    if (!isValidPin(pin)) {
       return NextResponse.json(
         {
           success: false,
@@ -136,7 +148,7 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
     const pin = req.headers.get("x-admin-pin") || searchParams.get("pin") || "";
 
-    if (pin !== OWNER_PIN) {
+    if (!isValidPin(pin)) {
       return NextResponse.json(
         { success: false, error: "Access Denied: Invalid Owner PIN." },
         { status: 401 }
