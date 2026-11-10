@@ -312,11 +312,11 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
               {/* View Projects CTA */}
               <a
                 href="#projects"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-teal-300 hover:from-cyan-300 hover:to-teal-200 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all transform hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-teal-300 hover:from-cyan-300 hover:to-teal-200 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all transform hover:-translate-y-0.5 text-center"
               >
                 <span>View Projects</span>
                 <ArrowRight className="w-4 h-4" />
@@ -325,7 +325,7 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
               {/* Download Resume Button */}
               <button
                 onClick={handleDownloadResume}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-900/70 border border-slate-700/80 hover:text-white hover:border-purple-500/60 hover:bg-slate-800/80 shadow-lg shadow-black/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all transform hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-900/70 border border-slate-700/80 hover:text-white hover:border-purple-500/60 hover:bg-slate-800/80 shadow-lg shadow-black/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all transform hover:-translate-y-0.5 text-center"
               >
                 <FileDown className="w-4 h-4 text-purple-400" />
                 <span>Download Resume</span>
@@ -334,7 +334,7 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
               {/* Contact Me CTA */}
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-300 bg-transparent border border-slate-800 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-slate-900/40 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-300 bg-transparent border border-slate-800 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-slate-900/40 transition-all text-center"
               >
                 <Mail className="w-4 h-4 text-cyan-400" />
                 <span>Contact Me</span>
@@ -343,19 +343,19 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
 
             {/* Download Notification Banner */}
             {downloadSuccess && (
-              <div className="mt-4 flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 text-xs font-mono animate-in fade-in duration-200">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+              <div className="mt-4 flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 text-xs font-mono animate-in fade-in duration-200 w-full sm:w-auto">
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Resume downloaded successfully! You can also view details below.</span>
               </div>
             )}
 
             {/* Quick Metrics / Stats Strip */}
-            <div className="grid grid-cols-3 gap-4 pt-10 mt-10 border-t border-slate-800/60 w-full max-w-xl">
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-800/60 w-full max-w-xl">
               <div>
                 <div className="text-2xl sm:text-3xl font-bold font-mono text-cyan-400">
                   4+
                 </div>
-                <div className="text-xs text-slate-400 uppercase tracking-wider mt-0.5">
+                <div className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-0.5">
                   Years Experience
                 </div>
               </div>
@@ -363,7 +363,7 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
                 <div className="text-2xl sm:text-3xl font-bold font-mono text-purple-400">
                   100%
                 </div>
-                <div className="text-xs text-slate-400 uppercase tracking-wider mt-0.5">
+                <div className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-0.5">
                   SLA Reliability
                 </div>
               </div>
@@ -371,7 +371,7 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
                 <div className="text-2xl sm:text-3xl font-bold font-mono text-emerald-400">
                   50+
                 </div>
-                <div className="text-xs text-slate-400 uppercase tracking-wider mt-0.5">
+                <div className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-0.5">
                   Deployments
                 </div>
               </div>
@@ -379,20 +379,20 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
           </div>
 
           {/* Right Column: Interactive Glass Terminal & Tech Stack Matrix */}
-          <div className="lg:col-span-5 relative">
+          <div className="lg:col-span-5 relative mt-6 lg:mt-0">
             {/* Glass Console Card */}
-            <div className="relative rounded-2xl glass-panel p-6 shadow-2xl shadow-cyan-950/30 border border-white/10 hover:border-cyan-500/30 transition-all">
+            <div className="relative rounded-2xl glass-panel p-4 sm:p-6 shadow-2xl shadow-cyan-950/30 border border-white/10 hover:border-cyan-500/30 transition-all">
               {/* Terminal Title Bar */}
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800/80">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
-                  <span className="text-xs font-mono text-slate-400 ml-2">
-                    eswaran@it-solutions-coimbatore:~
+              <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-slate-800/80 gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block shrink-0" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block shrink-0" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-mono text-slate-400 ml-1.5 truncate">
+                    eswaran@it-solutions:~
                   </span>
                 </div>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/50 text-cyan-400">
+                <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/50 text-cyan-400 shrink-0">
                   INTERACTIVE
                 </span>
               </div>

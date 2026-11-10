@@ -183,7 +183,7 @@ export default function Projects() {
             onClick={() => setSelectedProject(null)}
           >
             <div
-              className="relative w-full max-w-2xl glass-panel rounded-3xl p-6 sm:p-8 border border-cyan-500/40 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto glass-panel rounded-3xl p-6 sm:p-8 border border-cyan-500/40 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top Neon Stripe */}

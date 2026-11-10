@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Anchor Links */}
-          <div className="flex flex-wrap justify-center items-center gap-6 text-xs text-slate-400">
+          <div className="flex flex-wrap justify-center items-center gap-x-5 gap-y-2.5 sm:gap-6 text-xs text-slate-400">
             <a href="#about" className="hover:text-cyan-300 transition-colors">
               About &amp; Skills
             </a>

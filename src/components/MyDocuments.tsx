@@ -577,8 +577,8 @@ export default function MyDocuments() {
       {/* OWNER UPLOAD DOCUMENT MODAL */}
       {/* ============================================================ */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-          <div className="glass-panel w-full max-w-lg rounded-2xl p-6 sm:p-8 border border-white/15 shadow-2xl relative my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="glass-panel w-full max-w-lg rounded-2xl p-5 sm:p-8 border border-white/15 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => {
                 setShowUploadModal(false);
@@ -785,15 +785,15 @@ export default function MyDocuments() {
               {previewDoc.fileUrl.endsWith(".pdf") ? (
                 <iframe
                   src={`${previewDoc.fileUrl}#view=FitH`}
-                  className="w-full h-[65vh] rounded-xl border border-slate-800 bg-white/5"
+                  className="w-full h-[52vh] sm:h-[65vh] rounded-xl border border-slate-800 bg-white/5"
                   title={previewDoc.title}
                 />
               ) : (
-                <div className="max-h-[65vh] overflow-auto flex items-center justify-center p-4">
+                <div className="max-h-[52vh] sm:max-h-[65vh] overflow-auto flex items-center justify-center p-2 sm:p-4">
                   <img
                     src={previewDoc.fileUrl}
                     alt={previewDoc.title}
-                    className="max-h-[60vh] max-w-full rounded-xl object-contain border border-slate-800 shadow-xl"
+                    className="max-h-[48vh] sm:max-h-[60vh] max-w-full rounded-xl object-contain border border-slate-800 shadow-xl"
                   />
                 </div>
               )}

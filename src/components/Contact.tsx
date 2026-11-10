@@ -514,8 +514,8 @@ export default function Contact() {
       {/* OWNER EDIT CONTACT INFO MODAL */}
       {/* ============================================================ */}
       {showEditModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in overflow-y-auto">
-          <div className="glass-panel w-full max-w-lg rounded-2xl p-6 sm:p-8 border border-white/15 shadow-2xl relative my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in overflow-y-auto">
+          <div className="glass-panel w-full max-w-lg rounded-2xl p-5 sm:p-8 border border-white/15 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => {
                 setShowEditModal(false);
