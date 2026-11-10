@@ -68,6 +68,28 @@ ${portfolioData.projects
   )
   .join("\n")}
 
+EDUCATION:
+${portfolioData.education
+  .map(
+    (edu) => `
+* ${edu.degree}
+  ${edu.institution} | ${edu.grade}
+  Key Focus: ${edu.coursework.join(", ")}
+  Overview: ${edu.description}
+`
+  )
+  .join("\n")}
+
+CERTIFICATIONS & ACCREDITATIONS:
+${portfolioData.certifications
+  .map(
+    (c) => `
+* ${c.name} (${c.issuer})
+  Specialization: ${c.focus}
+`
+  )
+  .join("\n")}
+
 =====================================================
 Generated from ${portfolioData.personal.name}'s Portfolio Website
 =====================================================

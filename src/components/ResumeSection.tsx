@@ -60,9 +60,15 @@ ${portfolioData.projects
   )
   .join("\n")}
 
-EDUCATION & CERTIFICATIONS:
-- Bachelor of Engineering / Computer Science & Systems
-- Enterprise Hardware, Surveillance & Network Infrastructure Specialization
+EDUCATION:
+- Diploma in Computer Science & Engineering
+  Government Polytechnic College • First Class
+  Focus: Computer Hardware & Troubleshooting, Microprocessors, Networking Fundamentals, Digital Electronics, and System Maintenance.
+
+CERTIFICATIONS & ACCREDITATIONS:
+- All-Brand CCTV & NVR Surveillance Specialist
+- Enterprise Structured Cabling & T568B RJ45 Standard
+- Custom Workstation Engineering & Hardware Diagnostics
 ======================================================================
 `;
 
@@ -148,16 +154,34 @@ EDUCATION & CERTIFICATIONS:
               </div>
 
               <div className="space-y-4">
-                <div className="border-l-2 border-cyan-500/40 pl-3">
-                  <div className="text-sm font-semibold text-white">
-                    Bachelor of Engineering in Computer Science &amp; Engineering
+                <div className="border-l-2 border-cyan-500/40 pl-3.5 space-y-2">
+                  <div className="text-base font-bold text-white">
+                    Diploma in Computer Science &amp; Engineering
                   </div>
-                  <div className="text-xs text-cyan-400 font-mono mt-0.5">
-                    Affiliated University • First Class with Distinction
+                  <div className="text-xs text-cyan-400 font-mono flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-slate-200">Government Polytechnic College</span>
+                    <span>•</span>
+                    <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 font-semibold">
+                      First Class
+                    </span>
                   </div>
                   <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                    Coursework focused on Computer Networks, Distributed Systems, Linux OS Internals, Object-Oriented Programming, and Database Management.
+                    Coursework and practical lab training focused on Computer Hardware &amp; Troubleshooting, Microprocessors, Computer Networking Fundamentals, Digital Electronics, Operating Systems, and Peripheral Maintenance.
                   </p>
+                  <div className="pt-2 flex flex-wrap gap-1.5">
+                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
+                      Computer Hardware &amp; Peripherals
+                    </span>
+                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
+                      Networking Fundamentals
+                    </span>
+                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
+                      Digital Electronics
+                    </span>
+                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
+                      System Maintenance &amp; Diagnostics Lab
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

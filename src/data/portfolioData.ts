@@ -217,4 +217,38 @@ export const portfolioData = {
       metrics: "100% Signal Certified",
     },
   ],
+
+  education: [
+    {
+      degree: "Diploma in Computer Science & Engineering",
+      institution: "Government Polytechnic College",
+      grade: "First Class",
+      description:
+        "Comprehensive technical foundation and hands-on laboratory training covering computer hardware architecture, microprocessors, networking fundamentals, digital logic, and system maintenance.",
+      coursework: [
+        "Computer Hardware & Peripherals",
+        "Networking Fundamentals",
+        "Digital Electronics",
+        "System Maintenance & Diagnostics Lab",
+      ],
+    },
+  ],
+
+  certifications: [
+    {
+      name: "All-Brand CCTV & IP Surveillance Specialist",
+      issuer: "Industrial Surveillance & Security Training",
+      focus: "NVR/DVR, Multi-Brand IP Cameras, POE & CMOS setups",
+    },
+    {
+      name: "T568B Structured Cabling & Termination Standard",
+      issuer: "Enterprise Cabling & Network Infrastructure",
+      focus: "RJ45 Crimping, Patch Panels & LAN/WAN Architecture",
+    },
+    {
+      name: "Custom Workstation Assembly & Hardware Diagnostics",
+      issuer: "PC Engineering & Component Diagnostics",
+      focus: "Component-Level Troubleshooting & Multimeter Testing",
+    },
+  ],
 };
