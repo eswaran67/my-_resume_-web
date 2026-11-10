@@ -75,14 +75,67 @@ export default function MyDocuments() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const secretClickCountRef = useRef(0);
+  const secretClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check session storage on mount
+  // Hidden Easter Egg / Secret 3-Click Trigger for Owner
+  const handleSecretBadgeClick = () => {
+    secretClickCountRef.current += 1;
+    if (secretClickTimeoutRef.current) {
+      clearTimeout(secretClickTimeoutRef.current);
+    }
+
+    if (secretClickCountRef.current >= 3) {
+      secretClickCountRef.current = 0;
+      setShowPinModal(true);
+    } else {
+      secretClickTimeoutRef.current = setTimeout(() => {
+        secretClickCountRef.current = 0;
+      }, 1200);
+    }
+  };
+
+  // Keyboard shortcut listener for Owner (Ctrl + Shift + O or Ctrl + Shift + E)
   useEffect(() => {
-    const savedPin = sessionStorage.getItem("eswaran_owner_pin");
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        e.shiftKey &&
+        (e.key === "O" || e.key === "o" || e.key === "E" || e.key === "e")
+      ) {
+        e.preventDefault();
+        setShowPinModal(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Check persistent storage and URL parameters on mount
+  useEffect(() => {
+    // Check localStorage (remembers Eswaran on his own computer)
+    const savedPin =
+      localStorage.getItem("eswaran_owner_pin") ||
+      sessionStorage.getItem("eswaran_owner_pin");
     if (savedPin) {
       setIsOwner(true);
       setStoredPin(savedPin);
     }
+
+    // Check if secret URL query or hash is provided (e.g. ?owner=true or #owner)
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const hash = window.location.hash.toLowerCase();
+      if (
+        urlParams.get("owner") === "true" ||
+        urlParams.get("admin") === "true" ||
+        hash === "#owner" ||
+        hash === "#admin"
+      ) {
+        setShowPinModal(true);
+      }
+    }
+
     loadDocuments();
   }, []);
 
@@ -105,12 +158,12 @@ export default function MyDocuments() {
     e.preventDefault();
     setPinError("");
 
-    // Quick verification attempt against server or standard PIN "2026"
-    // We also support "1234" for convenience
     const validPins = ["2026", "1234"];
     if (validPins.includes(enteredPin.trim())) {
       setIsOwner(true);
       setStoredPin(enteredPin.trim());
+      // Persist in localStorage so Eswaran stays logged in on his own device
+      localStorage.setItem("eswaran_owner_pin", enteredPin.trim());
       sessionStorage.setItem("eswaran_owner_pin", enteredPin.trim());
       setShowPinModal(false);
       setEnteredPin("");
@@ -122,6 +175,7 @@ export default function MyDocuments() {
   const handleLogoutOwner = () => {
     setIsOwner(false);
     setStoredPin("");
+    localStorage.removeItem("eswaran_owner_pin");
     sessionStorage.removeItem("eswaran_owner_pin");
   };
 
@@ -231,7 +285,11 @@ export default function MyDocuments() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+            <div
+              onClick={handleSecretBadgeClick}
+              title="Official Credentials & Records"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)] select-none cursor-default"
+            >
               <FolderLock className="w-3.5 h-3.5" />
               <span>Official Credentials &amp; Records</span>
             </div>
@@ -243,16 +301,16 @@ export default function MyDocuments() {
             </p>
           </div>
 
-          {/* Owner Access Control Pill */}
-          <div className="flex items-center gap-3 shrink-0">
-            {isOwner ? (
-              <div className="flex items-center gap-3 bg-emerald-950/60 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+          {/* Owner Access Control: ONLY visible when authenticated as Owner on your device */}
+          {isOwner && (
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-3 bg-emerald-950/60 border border-emerald-500/40 px-3.5 py-1.5 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.2)] animate-fade-in">
                 <span className="flex h-2 w-2 relative">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
                 <span className="text-xs font-semibold text-emerald-300 font-mono">
-                  Owner Mode (Eswaran)
+                  Owner Mode (ESWARAN K)
                 </span>
                 <button
                   onClick={() => setShowUploadModal(true)}
@@ -269,16 +327,8 @@ export default function MyDocuments() {
                   <Unlock className="w-4 h-4 text-emerald-400" />
                 </button>
               </div>
-            ) : (
-              <button
-                onClick={() => setShowPinModal(true)}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 border border-slate-800 hover:border-cyan-500/40 text-xs font-mono transition-all group"
-              >
-                <Lock className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                <span>Owner Login</span>
-              </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Filter and Search Bar */}
@@ -441,12 +491,12 @@ export default function MyDocuments() {
           </div>
         )}
 
-        {/* Read-Only Notice for Visitors */}
+        {/* Verification Notice */}
         <div className="mt-8 text-center">
           <p className="text-[11px] font-mono text-slate-400 flex items-center justify-center gap-2">
-            <Lock className="w-3 h-3 text-cyan-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
             <span>
-              Secure Visitor Mode: All documents are cryptographic read-only copies for employer and client verification.
+              Official Academic &amp; Technical Credentials Repository of ESWARAN K
             </span>
           </p>
         </div>
