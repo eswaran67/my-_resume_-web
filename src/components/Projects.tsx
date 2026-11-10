@@ -78,7 +78,7 @@ export default function Projects() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-            <FolderGit2 className="w-3.5 h-3.5" />
+            <Server className="w-3.5 h-3.5" />
             <span>Infrastructure &amp; Engineering Deployments</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
