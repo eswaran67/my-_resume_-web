@@ -10,11 +10,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "ESWARAN K | System Engineer",
   description:
-    "Personal Portfolio and Resume of ESWARAN K — System Engineer at IT Solutions Private Limited, Coimbatore. Specializing in Custom PC Workstations, Hardware Assembly, All-Brand CCTV & IP Surveillance, T568B Structured Cabling, and Technical Support.",
+    "Personal Portfolio and Resume of ESWARAN K — System Engineer at Victinet IT Solutions Pvt Ltd, Madurai. Specializing in Custom PC Workstations, Hardware Assembly, All-Brand CCTV & IP Surveillance, T568B Structured Cabling, and Technical Support.",
   keywords: [
     "ESWARAN K",
     "System Engineer",
-    "IT Solutions Private Limited Coimbatore",
+    "Victinet IT Solutions Pvt Ltd Madurai",
     "Hardware Assembly",
     "Custom PC Workstations",
     "All-Brand CCTV",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Multimeter Testing",
     "Hardware Diagnostics",
     "Technical Support",
-    "Coimbatore",
+    "Madurai",
     "Portfolio",
     "Resume",
   ],

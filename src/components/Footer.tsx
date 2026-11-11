@@ -35,7 +35,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-sm">
-              {portfolioData.personal.title} — IT Solutions Private Limited, Coimbatore. Hardware Engineering, Surveillance &amp; T568B Networking.
+              {portfolioData.personal.title} — Victinet IT Solutions Pvt Ltd, Madurai. Hardware Engineering, Surveillance &amp; T568B Networking.
             </p>
           </div>
 

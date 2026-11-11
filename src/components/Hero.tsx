@@ -52,7 +52,7 @@ export default function Hero() {
               &gt; eswaran [UID: 1000, GID: 1000]
             </div>
             <div className="text-slate-300">
-              Role: System Engineer at IT Solutions Private Limited, Coimbatore
+              Role: System Engineer at Victinet IT Solutions Pvt Ltd, Madurai
             </div>
             <div className="text-slate-400">
               Specialties: Hardware Assembly, All-Brand CCTV &amp; NVR/DVR, T568B Cabling, Hardware Diagnostics
@@ -132,14 +132,14 @@ export default function Hero() {
         return (
           <div className="space-y-2 text-xs font-mono">
             <div className="text-cyan-300 font-semibold">
-              eswaran@it-solutions-coimbatore
+              eswaran@victinet-madurai
             </div>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-300 pt-1 border-t border-slate-800">
               <div>
-                <span className="text-slate-500">Company:</span> IT Solutions Pvt Ltd
+                <span className="text-slate-500">Company:</span> Victinet IT Solutions Pvt Ltd
               </div>
               <div>
-                <span className="text-slate-500">Location:</span> Coimbatore, Tamil Nadu
+                <span className="text-slate-500">Location:</span> Madurai, Tamil Nadu
               </div>
               <div>
                 <span className="text-slate-500">Role:</span> System Engineer
@@ -210,7 +210,7 @@ export default function Hero() {
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400 ml-0.5" />
                 </div>
                 <div className="text-[11px] font-mono text-slate-400 pl-1">
-                  IT Solutions Pvt Ltd • Coimbatore
+                  Victinet IT Solutions Pvt Ltd • Madurai
                 </div>
               </div>
             </div>

@@ -36,8 +36,8 @@ export const portfolioData = {
     tagline:
       "Specializing in Hardware Engineering, Surveillance Infrastructure, Enterprise Networking & Technical Support.",
     shortBio:
-      "Experienced System Engineer at IT Solutions Private Limited, Coimbatore. Specialized in building high-performance custom PC workstations, hardware assembly, diagnostics, all-brand CCTV & IP camera surveillance infrastructure, T568B structured cabling, and biometric punch systems.",
-    location: "Coimbatore, Tamil Nadu, India",
+      "Experienced System Engineer at Victinet IT Solutions Pvt Ltd, Madurai. Specialized in building high-performance custom PC workstations, hardware assembly, diagnostics, all-brand CCTV & IP camera surveillance infrastructure, T568B structured cabling, and biometric punch systems.",
+    location: "Madurai, Tamil Nadu, India",
     status: "Open to new opportunities",
     email: "eswaran.techdev@gmail.com",
     phone: "+91 98765 43210",
@@ -115,8 +115,8 @@ export const portfolioData = {
     {
       period: "2022 - Present",
       role: "System Engineer",
-      company: "IT Solutions Private Limited, Coimbatore",
-      location: "Coimbatore, Tamil Nadu",
+      company: "Victinet IT Solutions Pvt Ltd, Madurai",
+      location: "Madurai, Tamil Nadu",
       type: "Full-time",
       description: [
         "Specialized in hardware assembly, desktop/laptop troubleshooting, and building high-performance custom PC workstations tailored for business and high-compute workloads.",
@@ -138,8 +138,8 @@ export const portfolioData = {
     {
       period: "2021 - 2022",
       role: "Hardware & Surveillance Support Specialist",
-      company: "IT Solutions Private Limited, Coimbatore",
-      location: "Coimbatore, Tamil Nadu",
+      company: "Victinet IT Solutions Pvt Ltd, Madurai",
+      location: "Madurai, Tamil Nadu",
       type: "Full-time",
       description: [
         "Executed structured network cabling, patch panel crimping, and wall-jack terminations adhering strictly to T568B standards.",
@@ -158,8 +158,8 @@ export const portfolioData = {
     {
       period: "2020 - 2021",
       role: "Desktop & Field Support Associate",
-      company: "IT Solutions Private Limited, Coimbatore",
-      location: "Coimbatore, Tamil Nadu",
+      company: "Victinet IT Solutions Pvt Ltd, Madurai",
+      location: "Madurai, Tamil Nadu",
       type: "Full-time",
       description: [
         "Conducted initial diagnostic checks on customer desktops, laptops, and workstation hardware.",

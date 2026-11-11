@@ -576,7 +576,7 @@ export default function Contact() {
                     required
                     value={editLocation}
                     onChange={(e) => setEditLocation(e.target.value)}
-                    placeholder="e.g. Coimbatore, Tamil Nadu, India"
+                    placeholder="e.g. Madurai, Tamil Nadu, India"
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-cyan-400"
                   />
                 </div>
