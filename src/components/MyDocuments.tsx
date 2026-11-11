@@ -6,6 +6,7 @@ import {
   FileText,
   Download,
   Eye,
+  EyeOff,
   Lock,
   Unlock,
   Upload,
@@ -58,6 +59,7 @@ export default function MyDocuments() {
   const [enteredPin, setEnteredPin] = useState("");
   const [pinError, setPinError] = useState("");
   const [storedPin, setStoredPin] = useState("");
+  const [showPinInput, setShowPinInput] = useState(false);
 
   // Upload Modal State (New Document)
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -208,7 +210,7 @@ export default function MyDocuments() {
       setShowPinModal(false);
       setEnteredPin("");
     } else {
-      setPinError("Invalid Key! Please enter 2026 or eswaran.");
+      setPinError("Invalid Security PIN. Access denied.");
     }
   };
 
@@ -681,18 +683,25 @@ export default function MyDocuments() {
                 <label className="block text-xs font-mono text-slate-300 mb-2">
                   Owner Security Key / PIN
                 </label>
-                <input
-                  type="text"
-                  value={enteredPin}
-                  onChange={(e) => setEnteredPin(e.target.value)}
-                  placeholder="Enter 2026 or eswaran"
-                  maxLength={15}
-                  autoFocus
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-                />
-                <p className="text-[11px] text-slate-400 font-mono mt-1.5 text-center">
-                  Secret Key: <span className="text-cyan-400 font-semibold">2026</span> or <span className="text-cyan-400 font-semibold">eswaran</span>
-                </p>
+                <div className="relative">
+                  <input
+                    type={showPinInput ? "text" : "password"}
+                    value={enteredPin}
+                    onChange={(e) => setEnteredPin(e.target.value)}
+                    placeholder="Enter Security PIN"
+                    maxLength={20}
+                    autoFocus
+                    className="w-full pl-4 pr-11 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPinInput(!showPinInput)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 transition-colors"
+                    title={showPinInput ? "Hide PIN" : "Show PIN"}
+                  >
+                    {showPinInput ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               {pinError && (

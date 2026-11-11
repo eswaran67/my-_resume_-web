@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, AlertCircle, ArrowLeft, CheckCircle2, ShieldCheck, KeyRound } from "lucide-react";
+import { Lock, AlertCircle, ArrowLeft, CheckCircle2, ShieldCheck, KeyRound, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 const VALID_PINS = ["2026", "1234", "eswaran", "admin", "eswar"];
@@ -10,6 +10,7 @@ const VALID_PINS = ["2026", "1234", "eswaran", "admin", "eswar"];
 export default function AdminLoginPage() {
   const router = useRouter();
   const [pin, setPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
@@ -37,7 +38,7 @@ export default function AdminLoginPage() {
         router.push("/#contact");
       }, 700);
     } else {
-      setError("Access Denied: Invalid Security Key. Use '2026' or 'eswaran'");
+      setError("Access Denied: Invalid Security Key.");
     }
   };
 
@@ -106,18 +107,25 @@ export default function AdminLoginPage() {
               <label className="block text-xs font-mono text-slate-300 mb-2">
                 Security Key / PIN
               </label>
-              <input
-                type="text"
-                required
-                autoFocus
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                placeholder="Enter PIN (2026 or eswaran)"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
-              />
-              <p className="text-[11px] text-slate-400 font-mono mt-1.5 text-center">
-                Valid Keys: <span className="text-cyan-400 font-semibold">2026</span> or <span className="text-cyan-400 font-semibold">eswaran</span>
-              </p>
+              <div className="relative">
+                <input
+                  type={showPin ? "text" : "password"}
+                  required
+                  autoFocus
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  placeholder="Enter Security PIN"
+                  className="w-full pl-4 pr-11 py-3 rounded-xl bg-slate-950/90 border border-slate-700 text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPin(!showPin)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 transition-colors"
+                  title={showPin ? "Hide PIN" : "Show PIN"}
+                >
+                  {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             {error && (
