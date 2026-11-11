@@ -24,86 +24,12 @@ export default function Hero() {
   const [customInput, setCustomInput] = useState<string>("");
 
   const handleDownloadResume = () => {
-    const resumeContent = `=====================================================
-${portfolioData.personal.name.toUpperCase()} - RESUME
-${portfolioData.personal.title}
-Email: ${portfolioData.personal.email}
-GitHub: ${portfolioData.personal.github}
-LinkedIn: ${portfolioData.personal.linkedin}
-=====================================================
-
-PROFESSIONAL SUMMARY:
-${portfolioData.personal.shortBio}
-
-CORE DOMAINS & SKILLS:
-${portfolioData.skillCategories
-  .map(
-    (c, i) => `${i + 1}. ${c.title}:
-   - ${c.skills.map((s) => s.name).join(", ")}`
-  )
-  .join("\n")}
-
-PROFESSIONAL EXPERIENCE:
-${portfolioData.experiences
-  .map(
-    (exp) => `
-* ${exp.role} | ${exp.company} (${exp.period})
-  Location: ${exp.location} | Type: ${exp.type}
-  Technologies: ${exp.technologies.join(", ")}
-  Key Responsibilities:
-${exp.description.map((d) => `    - ${d}`).join("\n")}
-`
-  )
-  .join("\n")}
-
-FEATURED PROJECTS:
-${portfolioData.projects
-  .map(
-    (p) => `
-* ${p.title} [${p.category}]
-  Tagline: ${p.tagline}
-  Tech Stack: ${p.tags.join(", ")}
-  Live: ${p.liveUrl} | GitHub: ${p.githubUrl}
-`
-  )
-  .join("\n")}
-
-EDUCATION:
-${portfolioData.education
-  .map(
-    (edu) => `
-* ${edu.degree}
-  ${edu.institution} | ${edu.grade}
-  Key Focus: ${edu.coursework.join(", ")}
-  Overview: ${edu.description}
-`
-  )
-  .join("\n")}
-
-CERTIFICATIONS & ACCREDITATIONS:
-${portfolioData.certifications
-  .map(
-    (c) => `
-* ${c.name} (${c.issuer})
-  Specialization: ${c.focus}
-`
-  )
-  .join("\n")}
-
-=====================================================
-Generated from ${portfolioData.personal.name}'s Portfolio Website
-=====================================================
-`;
-
-    const blob = new Blob([resumeContent], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = url;
-    link.download = `${portfolioData.personal.name}_Resume.txt`;
+    link.href = "/documents/eswaran-resume.pdf";
+    link.download = `${portfolioData.personal.name.replace(/\s+/g, "_")}_Resume.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
 
     setDownloadSuccess(true);
     setTimeout(() => setDownloadSuccess(false), 4000);
@@ -328,7 +254,7 @@ Generated from ${portfolioData.personal.name}'s Portfolio Website
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-900/70 border border-slate-700/80 hover:text-white hover:border-purple-500/60 hover:bg-slate-800/80 shadow-lg shadow-black/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all transform hover:-translate-y-0.5 text-center"
               >
                 <FileDown className="w-4 h-4 text-purple-400" />
-                <span>Download Resume</span>
+                <span>Download Resume (PDF)</span>
               </button>
 
               {/* Contact Me CTA */}
