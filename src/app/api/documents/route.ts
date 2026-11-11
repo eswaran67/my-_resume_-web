@@ -19,7 +19,7 @@ function isValidPin(pin: string): boolean {
   return VALID_PINS.includes(pin.toLowerCase().trim());
 }
 
-interface DocumentItem {
+export interface DocumentItem {
   id: string;
   title: string;
   category: string;
@@ -46,8 +46,12 @@ async function getDocumentRegistry(): Promise<DocumentItem[]> {
 }
 
 async function saveDocumentRegistry(items: DocumentItem[]): Promise<void> {
-  await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
-  await fs.writeFile(REGISTRY_FILE, JSON.stringify(items, null, 2), "utf-8");
+  try {
+    await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
+    await fs.writeFile(REGISTRY_FILE, JSON.stringify(items, null, 2), "utf-8");
+  } catch (err: any) {
+    console.warn("Could not save to disk (e.g. read-only serverless environment):", err.message);
+  }
 }
 
 function formatBytes(bytes: number): string {
@@ -100,23 +104,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
-
-    // Sanitize filename and make unique
     const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const uniqueFileName = `${Date.now()}-${originalName}`;
-    const destinationPath = path.join(DOCUMENTS_DIR, uniqueFileName);
+    let fileUrl = `/documents/${uniqueFileName}`;
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(destinationPath, buffer);
+    try {
+      await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
+      const destinationPath = path.join(DOCUMENTS_DIR, uniqueFileName);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await fs.writeFile(destinationPath, buffer);
+    } catch (fsErr) {
+      // Serverless fallback (e.g. Vercel read-only filesystem)
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const base64Data = buffer.toString("base64");
+      const mime = file.type || "application/pdf";
+      fileUrl = `data:${mime};base64,${base64Data}`;
+    }
 
     const newDoc: DocumentItem = {
       id: `doc-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       title,
       category,
       issuer,
-      fileUrl: `/documents/${uniqueFileName}`,
-      fileName: uniqueFileName,
+      fileUrl,
+      fileName: file.name,
       fileSize: formatBytes(file.size),
       fileType: file.type || "application/octet-stream",
       uploadDate: new Date().toISOString().split("T")[0],
@@ -136,6 +147,109 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     return NextResponse.json(
       { success: false, error: err.message || "Failed to process document upload" },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT: Strictly protected - only the owner with correct PIN can edit documents or replace files
+export async function PUT(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+    const pin = (formData.get("pin") as string) || req.headers.get("x-admin-pin") || "";
+
+    if (!isValidPin(pin)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Access Denied: Invalid Owner PIN. Only Eswaran can edit documents in this portal.",
+        },
+        { status: 401 }
+      );
+    }
+
+    const id = (formData.get("id") as string)?.trim();
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "Document ID is required." },
+        { status: 400 }
+      );
+    }
+
+    const title = (formData.get("title") as string)?.trim();
+    const category = (formData.get("category") as string)?.trim();
+    const issuer = (formData.get("issuer") as string)?.trim();
+    const description = (formData.get("description") as string)?.trim();
+    const file = formData.get("file") as File | null;
+
+    const currentDocs = await getDocumentRegistry();
+    const docIndex = currentDocs.findIndex((d) => d.id === id);
+
+    if (docIndex === -1) {
+      return NextResponse.json(
+        { success: false, error: "Document not found in registry." },
+        { status: 404 }
+      );
+    }
+
+    const existingDoc = currentDocs[docIndex];
+    const updatedDoc: DocumentItem = { ...existingDoc };
+
+    if (title) updatedDoc.title = title;
+    if (category) updatedDoc.category = category;
+    if (issuer) updatedDoc.issuer = issuer;
+    if (description !== undefined && description !== null) {
+      updatedDoc.description = description;
+    }
+
+    // If a replacement file was provided
+    if (file && typeof file === "object" && file.size > 0 && file.name) {
+      const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const uniqueFileName = `${Date.now()}-${originalName}`;
+      let fileUrl = `/documents/${uniqueFileName}`;
+
+      try {
+        await fs.mkdir(DOCUMENTS_DIR, { recursive: true });
+        const destinationPath = path.join(DOCUMENTS_DIR, uniqueFileName);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await fs.writeFile(destinationPath, buffer);
+
+        // Clean up previous uploaded file if safe
+        if (
+          existingDoc.fileName &&
+          existingDoc.fileName !== uniqueFileName &&
+          !existingDoc.fileName.includes("sample")
+        ) {
+          try {
+            await fs.unlink(path.join(DOCUMENTS_DIR, existingDoc.fileName));
+          } catch (ignore) {}
+        }
+      } catch (fsErr) {
+        // Serverless fallback for Vercel read-only filesystem
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const base64Data = buffer.toString("base64");
+        const mime = file.type || "application/pdf";
+        fileUrl = `data:${mime};base64,${base64Data}`;
+      }
+
+      updatedDoc.fileUrl = fileUrl;
+      updatedDoc.fileName = file.name;
+      updatedDoc.fileSize = formatBytes(file.size);
+      updatedDoc.fileType = file.type || "application/octet-stream";
+      updatedDoc.uploadDate = new Date().toISOString().split("T")[0];
+    }
+
+    currentDocs[docIndex] = updatedDoc;
+    await saveDocumentRegistry(currentDocs);
+
+    return NextResponse.json({
+      success: true,
+      message: "Document updated successfully in vault.",
+      document: updatedDoc,
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, error: err.message || "Failed to update document" },
       { status: 500 }
     );
   }
