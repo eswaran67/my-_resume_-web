@@ -279,7 +279,7 @@ export default function Hero() {
             <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-800/60 w-full max-w-xl">
               <div>
                 <div className="text-2xl sm:text-3xl font-bold font-mono text-cyan-400">
-                  4+
+                  2+
                 </div>
                 <div className="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-0.5">
                   Years Experience
