@@ -50,5 +50,18 @@
     "uploadDate": "2023-08-12",
     "verified": true,
     "description": "Certification in enterprise Cat6/Cat6A cabling standards, punch-down blocks, patch panels, and RJ45 crimping testing."
+  },
+  {
+    "id": "doc-provisional-certificate",
+    "title": "Diploma Provisional Certificate",
+    "category": "Education",
+    "issuer": "Government Polytechnic College / State Board",
+    "fileUrl": "/documents/provisional-certificate.pdf",
+    "fileName": "provisional-certificate.pdf",
+    "fileSize": "1.2 MB",
+    "fileType": "application/pdf",
+    "uploadDate": "2024-05-18",
+    "verified": true,
+    "description": "Official State Board Provisional Certificate awarded for Diploma in Computer Science & Engineering with First Class distinction."
   }
 ]
