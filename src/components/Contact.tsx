@@ -601,7 +601,7 @@ export default function Contact() {
                       type="text"
                       value={editPhone}
                       onChange={(e) => setEditPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 63697 16479"
                       className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
                     />
                   </div>
@@ -614,7 +614,7 @@ export default function Contact() {
                       type="text"
                       value={editWhatsapp}
                       onChange={(e) => setEditWhatsapp(e.target.value)}
-                      placeholder="https://wa.me/919876543210"
+                      placeholder="https://wa.me/916369716479"
                       className="w-full px-4 py-2.5 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-cyan-400"
                     />
                   </div>
