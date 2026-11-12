@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { portfolioData } from "@/data/portfolioData";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function AboutSkills() {
   const [selectedCategory, setSelectedCategory] = useState<number>(0);
@@ -48,33 +49,36 @@ export default function AboutSkills() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-            <Activity className="w-3.5 h-3.5" />
-            <span>Technical Capabilities &amp; Expertise</span>
+        <ScrollReveal direction="up">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+              <Activity className="w-3.5 h-3.5" />
+              <span>Technical Capabilities &amp; Expertise</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+              Skills &amp; <span className="text-gradient-cyan-purple">Engineering Expertise</span>
+            </h2>
+            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+              Hands-on hardware engineering, enterprise surveillance deployments, structured network cabling (T568B), and on-site technical support.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Skills &amp; <span className="text-gradient-cyan-purple">Engineering Expertise</span>
-          </h2>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-            Hands-on hardware engineering, enterprise surveillance deployments, structured network cabling (T568B), and on-site technical support.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* 4 Core Pillars Overview Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {portfolioData.skillCategories.map((cat, index) => {
-            const isSelected = selectedCategory === index;
-            return (
-              <button
-                key={cat.title}
-                onClick={() => setSelectedCategory(index)}
-                className={`text-left p-6 rounded-2xl transition-all duration-300 relative group flex flex-col justify-between ${
-                  isSelected
-                    ? "glass-panel border-cyan-400/60 shadow-[0_0_30px_-5px_rgba(0,240,255,0.25)] bg-slate-900/90 scale-[1.02]"
-                    : "glass-panel border-white/5 hover:border-cyan-500/30 hover:bg-slate-900/70"
-                }`}
-              >
+        <ScrollReveal direction="up" delayMs={100}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {portfolioData.skillCategories.map((cat, index) => {
+              const isSelected = selectedCategory === index;
+              return (
+                <button
+                  key={cat.title}
+                  onClick={() => setSelectedCategory(index)}
+                  className={`btn-click card-shine text-left p-6 rounded-2xl transition-all duration-300 relative group flex flex-col justify-between ${
+                    isSelected
+                      ? "glass-panel border-cyan-400/60 shadow-[0_0_30px_-5px_rgba(0,240,255,0.25)] bg-slate-900/90 scale-[1.02]"
+                      : "glass-panel border-white/5 hover:border-cyan-500/30 hover:bg-slate-900/70"
+                  }`}
+                >
                 {/* Active indicator dot */}
                 {isSelected && (
                   <div className="absolute top-4 right-4 flex items-center gap-1.5">
@@ -104,10 +108,12 @@ export default function AboutSkills() {
               </button>
             );
           })}
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Detailed Interactive Inspector Panel for Selected Category */}
-        <div className="rounded-3xl glass-panel p-6 sm:p-10 border border-white/10 shadow-2xl relative overflow-hidden">
+        <ScrollReveal direction="up" delay={150}>
+          <div className="rounded-3xl glass-panel p-6 sm:p-10 border border-white/10 shadow-2xl relative overflow-hidden card-shine">
           {/* Subtle neon gradient bar across the top of card */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600" />
 
@@ -188,7 +194,8 @@ export default function AboutSkills() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

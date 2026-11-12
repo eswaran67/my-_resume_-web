@@ -24,6 +24,7 @@ import {
   Pencil,
   RefreshCw,
 } from "lucide-react";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export interface VaultDocument {
   id: string;
@@ -435,13 +436,13 @@ export default function MyDocuments() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono mb-4 btn-click">
               <FolderLock className="w-3.5 h-3.5" />
               <button
                 onClick={() => setShowPinModal(true)}
-                className="hover:underline focus:outline-none"
+                className="hover:underline focus:outline-none cursor-pointer"
                 title="Click to Unlock Owner Security Mode"
               >
                 Official Credentials &amp; Certifications
@@ -468,7 +469,7 @@ export default function MyDocuments() {
                 </span>
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors shadow"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors shadow btn-click"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Upload
@@ -476,14 +477,14 @@ export default function MyDocuments() {
                 <button
                   onClick={handleLogoutOwner}
                   title="Lock Owner Mode"
-                  className="text-slate-400 hover:text-white transition-colors p-1"
+                  className="text-slate-400 hover:text-white transition-colors p-1 btn-click"
                 >
                   <Unlock className="w-4 h-4 text-emerald-400" />
                 </button>
               </div>
             </div>
           )}
-        </div>
+        </ScrollReveal>
 
         {/* Filter and Search Bar */}
         <div className="glass-panel p-4 rounded-2xl border border-white/5 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -493,7 +494,7 @@ export default function MyDocuments() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap btn-click ${
                   activeCategory === cat
                     ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,240,255,0.2)]"
                     : "text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent"
@@ -517,7 +518,7 @@ export default function MyDocuments() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white btn-click"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -543,7 +544,7 @@ export default function MyDocuments() {
             {isOwner && (
               <button
                 onClick={() => setShowUploadModal(true)}
-                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition-all shadow"
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition-all shadow btn-click"
               >
                 <Plus className="w-4 h-4" />
                 Upload First Document
@@ -552,10 +553,12 @@ export default function MyDocuments() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredDocs.map((doc) => (
-              <div
+            {filteredDocs.map((doc, idx) => (
+              <ScrollReveal
                 key={doc.id}
-                className="glass-panel group relative rounded-2xl p-6 border border-white/10 hover:border-cyan-500/40 transition-all duration-300 flex flex-col justify-between hover:shadow-[0_0_25px_rgba(0,240,255,0.12)]"
+                direction="up"
+                delay={(idx % 3) * 100}
+                className="glass-panel card-shine group relative rounded-2xl p-6 border border-white/10 hover:border-cyan-500/40 transition-all duration-300 flex flex-col justify-between hover:shadow-[0_0_25px_rgba(0,240,255,0.18)] hover:-translate-y-1"
               >
                 <div>
                   {/* Top Bar: Category badge & Verified status */}
@@ -580,7 +583,7 @@ export default function MyDocuments() {
 
                   {/* Icon & Title */}
                   <div className="flex items-start gap-3.5 mb-3">
-                    <div className="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 group-hover:border-cyan-500/40 transition-colors">
+                    <div className="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 group-hover:border-cyan-500/40 transition-colors group-hover:scale-105">
                       <FileCheck className="w-6 h-6 text-cyan-400" />
                     </div>
                     <div>
@@ -612,7 +615,7 @@ export default function MyDocuments() {
                     <button
                       onClick={() => setPreviewDoc(doc)}
                       title="Preview Document"
-                      className="p-2 rounded-lg bg-slate-900 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-slate-800 hover:border-cyan-500/30 transition-all"
+                      className="p-2 rounded-lg bg-slate-900 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-slate-800 hover:border-cyan-500/30 transition-all btn-click"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
@@ -622,7 +625,7 @@ export default function MyDocuments() {
                       href={doc.fileUrl}
                       download={doc.fileName}
                       title="Download Official Document"
-                      className="p-2 rounded-lg bg-slate-900 hover:bg-purple-500/20 text-slate-300 hover:text-purple-300 border border-slate-800 hover:border-purple-500/30 transition-all"
+                      className="p-2 rounded-lg bg-slate-900 hover:bg-purple-500/20 text-slate-300 hover:text-purple-300 border border-slate-800 hover:border-purple-500/30 transition-all btn-click"
                     >
                       <Download className="w-4 h-4" />
                     </a>
@@ -632,7 +635,7 @@ export default function MyDocuments() {
                       <button
                         onClick={() => handleOpenEditModal(doc)}
                         title="Edit Document & Replace File (Owner Only)"
-                        className="p-2 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 text-amber-400 border border-amber-800/50 hover:border-amber-500/60 transition-all shadow-[0_0_10px_rgba(245,158,11,0.15)]"
+                        className="p-2 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 text-amber-400 border border-amber-800/50 hover:border-amber-500/60 transition-all shadow-[0_0_10px_rgba(245,158,11,0.15)] btn-click"
                       >
                         <Pencil className="w-4 h-4" />
                       </button>
@@ -644,14 +647,14 @@ export default function MyDocuments() {
                         onClick={() => handleDeleteDocument(doc.id, doc.title)}
                         disabled={deletingId === doc.id}
                         title="Delete Document (Owner Only)"
-                        className="p-2 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/50 hover:border-red-500/60 transition-all disabled:opacity-50"
+                        className="p-2 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/50 hover:border-red-500/60 transition-all disabled:opacity-50 btn-click"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     )}
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         )}

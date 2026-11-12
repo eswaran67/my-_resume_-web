@@ -20,6 +20,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { portfolioData } from "@/data/portfolioData";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const VALID_PINS = ["2026", "1234", "eswaran", "admin", "eswar"];
 
@@ -171,13 +172,13 @@ export default function ResumeSection() {
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600" />
 
           {/* Header Row */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-800">
+          <ScrollReveal direction="up" className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-800">
             <div>
               <div
                 onClick={() => {
                   if (!isOwner) setShowPinPrompt(true);
                 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-3 cursor-pointer select-none"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-3 cursor-pointer select-none btn-click"
                 title={isOwner ? "Owner Mode Active" : "Click to authenticate as Owner"}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -199,7 +200,7 @@ export default function ResumeSection() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowUploadModal(true)}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/70 border border-emerald-500/50 hover:bg-emerald-900/60 transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/70 border border-emerald-500/50 hover:bg-emerald-900/60 transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] btn-click"
                     title="Upload / Replace your actual Resume PDF"
                   >
                     <Upload className="w-3.5 h-3.5 text-emerald-400" />
@@ -207,7 +208,7 @@ export default function ResumeSection() {
                   </button>
                   <button
                     onClick={handleLockOwnerMode}
-                    className="inline-flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-xs font-mono text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:text-white transition-all"
+                    className="inline-flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl text-xs font-mono text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:text-white transition-all btn-click"
                     title="Lock & Hide upload button from visitors"
                   >
                     <Lock className="w-3.5 h-3.5 text-cyan-400" />
@@ -219,7 +220,7 @@ export default function ResumeSection() {
               {/* View / Preview PDF Modal Button */}
               <button
                 onClick={() => setShowPreviewModal(true)}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-700/80 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-center"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-700/80 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-center btn-click"
               >
                 <Eye className="w-4 h-4 text-cyan-400" />
                 <span>View PDF</span>
@@ -228,7 +229,7 @@ export default function ResumeSection() {
               {/* Print Button (Desktop only) */}
               <button
                 onClick={handlePrint}
-                className="hidden sm:inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-700/80 hover:text-white hover:border-slate-500 transition-all"
+                className="hidden sm:inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 border border-slate-700/80 hover:text-white hover:border-slate-500 transition-all btn-click"
               >
                 <Printer className="w-4 h-4 text-slate-400" />
                 <span>Print</span>
@@ -237,13 +238,13 @@ export default function ResumeSection() {
               {/* Download Resume PDF Button */}
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-blue-400 hover:from-cyan-300 hover:to-blue-300 shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-all transform hover:-translate-y-0.5 text-center font-mono"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-blue-400 hover:from-cyan-300 hover:to-blue-300 shadow-[0_0_20px_rgba(0,240,255,0.35)] transition-all transform hover:-translate-y-0.5 text-center font-mono btn-click card-shine"
               >
                 <FileDown className="w-4 h-4" />
                 <span>Download Resume (PDF)</span>
               </button>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Download Notification */}
           {downloadSuccess && (
@@ -256,88 +257,92 @@ export default function ResumeSection() {
           {/* Education & Certifications Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
             {/* Education Box */}
-            <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
-                  <GraduationCap className="w-5 h-5 text-cyan-400" />
+            <ScrollReveal direction="left" delay={150}>
+              <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80 card-shine transition-all duration-300 hover:border-cyan-500/40 hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                    <GraduationCap className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white">Education</h4>
+                    <p className="text-xs text-slate-400 font-mono">Academic Foundation</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-base font-bold text-white">Education</h4>
-                  <p className="text-xs text-slate-400 font-mono">Academic Foundation</p>
-                </div>
-              </div>
 
-              <div className="space-y-4">
-                <div className="border-l-2 border-cyan-500/40 pl-3.5 space-y-2">
-                  <div className="text-base font-bold text-white">
-                    Diploma in Computer Science &amp; Engineering
-                  </div>
-                  <div className="text-xs text-cyan-400 font-mono flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-slate-200">Government Polytechnic College</span>
-                    <span>•</span>
-                    <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 font-semibold">
-                      First Class
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                    Coursework and practical lab training focused on Computer Hardware &amp; Troubleshooting, Microprocessors, Computer Networking Fundamentals, Digital Electronics, Operating Systems, and Peripheral Maintenance.
-                  </p>
-                  <div className="pt-2 flex flex-wrap gap-1.5">
-                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
-                      Computer Hardware &amp; Peripherals
-                    </span>
-                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
-                      Networking Fundamentals
-                    </span>
-                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
-                      Digital Electronics
-                    </span>
-                    <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800">
-                      System Maintenance &amp; Diagnostics Lab
-                    </span>
+                <div className="space-y-4">
+                  <div className="border-l-2 border-cyan-500/40 pl-3.5 space-y-2">
+                    <div className="text-base font-bold text-white">
+                      Diploma in Computer Science &amp; Engineering
+                    </div>
+                    <div className="text-xs text-cyan-400 font-mono flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-slate-200">Government Polytechnic College</span>
+                      <span>•</span>
+                      <span className="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 font-semibold">
+                        First Class
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                      Coursework and practical lab training focused on Computer Hardware &amp; Troubleshooting, Microprocessors, Computer Networking Fundamentals, Digital Electronics, Operating Systems, and Peripheral Maintenance.
+                    </p>
+                    <div className="pt-2 flex flex-wrap gap-1.5">
+                      <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800 btn-click">
+                        Computer Hardware &amp; Peripherals
+                      </span>
+                      <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800 btn-click">
+                        Networking Fundamentals
+                      </span>
+                      <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800 btn-click">
+                        Digital Electronics
+                      </span>
+                      <span className="px-2.5 py-1 rounded text-[11px] font-mono bg-slate-900 text-slate-300 border border-slate-800 btn-click">
+                        System Maintenance &amp; Diagnostics Lab
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Certifications Box */}
-            <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center">
-                  <Award className="w-5 h-5 text-purple-400" />
+            <ScrollReveal direction="right" delay={250}>
+              <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800/80 card-shine transition-all duration-300 hover:border-purple-500/40 hover:shadow-[0_0_25px_rgba(168,85,247,0.15)] h-full">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center">
+                    <Award className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white">Certifications &amp; Accreditations</h4>
+                    <p className="text-xs text-slate-400 font-mono">Professional Training</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-base font-bold text-white">Certifications &amp; Accreditations</h4>
-                  <p className="text-xs text-slate-400 font-mono">Professional Training</p>
+
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2.5 text-xs text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
+                    <div>
+                      <span className="font-semibold text-white">All-Brand CCTV &amp; NVR Surveillance Specialist</span>
+                      <span className="block text-[11px] text-slate-400 font-mono">Commercial Security Deployment &amp; Video Storage Across All Brands</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 text-xs text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                    <div>
+                      <span className="font-semibold text-white">Enterprise Structured Cabling &amp; T568B RJ45 Standard</span>
+                      <span className="block text-[11px] text-slate-400 font-mono">Network Cabling, Patch Panels &amp; LAN Infrastructure</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2.5 text-xs text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                    <div>
+                      <span className="font-semibold text-white">Custom Workstation Engineering &amp; Hardware Diagnostics</span>
+                      <span className="block text-[11px] text-slate-400 font-mono">Multimeter Testing, CMOS Setup &amp; Desktop Troubleshooting</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div className="space-y-3">
-                <div className="flex items-start gap-2.5 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
-                  <div>
-                    <span className="font-semibold text-white">All-Brand CCTV &amp; NVR Surveillance Specialist</span>
-                    <span className="block text-[11px] text-slate-400 font-mono">Commercial Security Deployment &amp; Video Storage Across All Brands</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
-                  <div>
-                    <span className="font-semibold text-white">Enterprise Structured Cabling &amp; T568B RJ45 Standard</span>
-                    <span className="block text-[11px] text-slate-400 font-mono">Network Cabling, Patch Panels &amp; LAN Infrastructure</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 text-xs text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
-                  <div>
-                    <span className="font-semibold text-white">Custom Workstation Engineering &amp; Hardware Diagnostics</span>
-                    <span className="block text-[11px] text-slate-400 font-mono">Multimeter Testing, CMOS Setup &amp; Desktop Troubleshooting</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>

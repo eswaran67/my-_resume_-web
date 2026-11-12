@@ -8,10 +8,16 @@ import ResumeSection from "@/components/ResumeSection";
 import MyDocuments from "@/components/MyDocuments";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import CursorGlow from "@/components/CursorGlow";
+import ClickEffects from "@/components/ClickEffects";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#07090e] text-slate-100 overflow-x-hidden">
+    <main className="relative min-h-screen bg-[#07090e] text-slate-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* Interactive Cursor Spotlight & Click Physics */}
+      <CursorGlow />
+      <ClickEffects />
+
       {/* Background Decorative Mesh Glows */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Top-Right Neon Violet Orb */}

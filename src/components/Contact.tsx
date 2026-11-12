@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon, TwitterIcon, WhatsAppIcon } from "@/components/Icons";
 import { portfolioData } from "@/data/portfolioData";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const VALID_PINS = ["2026", "1234", "eswaran", "admin", "eswar"];
 
@@ -239,8 +240,8 @@ export default function Contact() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+        <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)] btn-click">
             <MessageSquare className="w-3.5 h-3.5" />
             <span>Initiate Communication</span>
           </div>
@@ -250,13 +251,13 @@ export default function Contact() {
           <p className="text-slate-300 text-base sm:text-lg">
             Have an infrastructure challenge, surveillance deployment, custom workstation requirement, or an open engineering role? Let&apos;s build something exceptional together.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* Left Column: Direct Info & Social Connections */}
-          <div className="lg:col-span-5 space-y-6">
+          <ScrollReveal direction="left" delay={150} className="lg:col-span-5 space-y-6">
             {/* Quick Contact Card */}
-            <div className="glass-panel p-7 rounded-2xl border border-white/10 shadow-xl space-y-6 relative">
+            <div className="glass-panel card-shine p-7 rounded-2xl border border-white/10 shadow-xl space-y-6 relative hover:border-cyan-500/30 transition-all">
               <div className="flex items-center justify-between">
                 <h3
                   onClick={() => {
@@ -274,7 +275,7 @@ export default function Contact() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setShowEditModal(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-colors shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-colors shadow-sm btn-click"
                       title="Edit Email & Address"
                     >
                       <Pencil className="w-3 h-3" />
@@ -282,7 +283,7 @@ export default function Contact() {
                     </button>
                     <button
                       onClick={handleLockOwnerMode}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 text-xs font-mono transition-colors"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 text-xs font-mono transition-colors btn-click"
                       title="Lock & Hide from Visitors"
                     >
                       <Lock className="w-3 h-3 text-cyan-400" />
@@ -314,7 +315,7 @@ export default function Contact() {
                 <button
                   type="button"
                   onClick={handleCopyEmail}
-                  className="p-2 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 transition-all shrink-0 ml-2"
+                  className="p-2 rounded-lg bg-slate-900 border border-slate-700/80 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 transition-all shrink-0 ml-2 btn-click"
                   title="Copy email to clipboard"
                   aria-label="Copy email"
                 >
@@ -348,7 +349,7 @@ export default function Contact() {
                     href={contactInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
+                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-cyan-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group btn-click"
                   >
                     <GithubIcon className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 group-hover:scale-110 transition-transform" />
                     <span className="text-[11px] font-mono">GitHub</span>
@@ -358,7 +359,7 @@ export default function Contact() {
                     href={contactInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
+                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group btn-click"
                   >
                     <LinkedinIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-400 group-hover:scale-110 transition-transform" />
                     <span className="text-[11px] font-mono">LinkedIn</span>
@@ -368,7 +369,7 @@ export default function Contact() {
                     href={contactInfo.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group"
+                    className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900/80 text-slate-300 hover:text-white flex flex-col items-center gap-1.5 transition-all group btn-click"
                   >
                     <WhatsAppIcon className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 group-hover:scale-110 transition-transform" />
                     <span className="text-[11px] font-mono">WhatsApp</span>
@@ -378,7 +379,7 @@ export default function Contact() {
             </div>
 
             {/* Quick Availability Box */}
-            <div className="glass-panel p-6 rounded-2xl border border-white/5 flex items-center justify-between">
+            <div className="glass-panel card-shine p-6 rounded-2xl border border-white/5 flex items-center justify-between">
               <div>
                 <span className="text-xs font-mono text-slate-400">Engineering Availability</span>
                 <p className="text-sm font-semibold text-emerald-400 flex items-center gap-2 mt-0.5">
@@ -388,11 +389,11 @@ export default function Contact() {
               </div>
               <Phone className="w-5 h-5 text-cyan-400 opacity-60" />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="glass-panel p-8 sm:p-10 rounded-2xl border border-white/10 shadow-xl">
+          <ScrollReveal direction="right" delay={250} className="lg:col-span-7">
+            <div className="glass-panel card-shine p-8 sm:p-10 rounded-2xl border border-white/10 shadow-xl">
               <h3 className="text-2xl font-bold text-white mb-2">Send a Message</h3>
               <p className="text-slate-300 text-sm mb-6">
                 Fill in the details below and I will respond to your technical requirements promptly.
@@ -503,7 +504,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-purple-400 hover:from-cyan-300 hover:to-purple-300 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all transform hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-purple-400 hover:from-cyan-300 hover:to-purple-300 shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all transform hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed btn-click card-shine"
                 >
                   {isSubmitting ? (
                     <>
@@ -519,7 +520,7 @@ export default function Contact() {
                 </button>
               </form>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
 

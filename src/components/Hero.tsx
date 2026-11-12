@@ -17,6 +17,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { portfolioData } from "@/data/portfolioData";
+import HeroParticles from "@/components/HeroParticles";
 
 export default function Hero() {
   const [downloadSuccess, setDownloadSuccess] = useState(false);
@@ -178,13 +179,16 @@ export default function Hero() {
       {/* Subtle Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
 
+      {/* Interactive Cyber Particle Network Canvas */}
+      <HeroParticles />
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Greeting, Headline, Bio, Buttons */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
             {/* Profile Avatar & Status Pill Badge */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="relative group">
+              <div className="relative group animate-float-slow">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 via-blue-500 to-purple-600 shadow-[0_0_25px_rgba(0,240,255,0.4)] group-hover:shadow-[0_0_35px_rgba(0,240,255,0.6)] transition-all">
                   <div className="w-full h-full rounded-[13px] overflow-hidden bg-slate-950">
                     <Image
@@ -242,16 +246,16 @@ export default function Hero() {
               {/* View Projects CTA */}
               <a
                 href="#projects"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-teal-300 hover:from-cyan-300 hover:to-teal-200 shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-all transform hover:-translate-y-0.5 text-center"
+                className="btn-click card-shine inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 via-cyan-300 to-teal-300 hover:from-cyan-300 hover:to-teal-200 shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:shadow-[0_0_35px_rgba(0,240,255,0.7)] text-center cursor-pointer"
               >
                 <span>View Projects</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
 
               {/* Download Resume Button */}
               <button
                 onClick={handleDownloadResume}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-900/70 border border-slate-700/80 hover:text-white hover:border-purple-500/60 hover:bg-slate-800/80 shadow-lg shadow-black/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all transform hover:-translate-y-0.5 text-center"
+                className="btn-click card-shine inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-200 bg-slate-900/80 border border-slate-700/80 hover:text-white hover:border-purple-500/60 hover:bg-slate-800/90 shadow-lg shadow-black/30 hover:shadow-[0_0_25px_rgba(168,85,247,0.35)] text-center cursor-pointer"
               >
                 <FileDown className="w-4 h-4 text-purple-400" />
                 <span>Download Resume (PDF)</span>
@@ -260,7 +264,7 @@ export default function Hero() {
               {/* Contact Me CTA */}
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-300 bg-transparent border border-slate-800 hover:text-cyan-300 hover:border-cyan-500/40 hover:bg-slate-900/40 transition-all text-center"
+                className="btn-click inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-300 bg-slate-950/40 border border-slate-800 hover:text-cyan-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] text-center cursor-pointer"
               >
                 <Mail className="w-4 h-4 text-cyan-400" />
                 <span>Contact Me</span>
@@ -331,9 +335,9 @@ export default function Hero() {
                       key={cmd}
                       type="button"
                       onClick={() => setActiveCommand(cmd)}
-                      className={`px-2.5 py-1 rounded text-[11px] font-mono transition-all ${
+                      className={`btn-click px-2.5 py-1 rounded text-[11px] font-mono transition-all ${
                         activeCommand === cmd
-                          ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_10px_rgba(0,240,255,0.2)]"
+                          ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_12px_rgba(0,240,255,0.3)] scale-[1.03]"
                           : "bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-white hover:border-slate-700"
                       }`}
                     >

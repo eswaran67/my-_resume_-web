@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { portfolioData, ProjectItem } from "@/data/portfolioData";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState<string>("All");
@@ -76,46 +77,49 @@ export default function Projects() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-            <Server className="w-3.5 h-3.5" />
-            <span>Infrastructure &amp; Engineering Deployments</span>
+        <ScrollReveal direction="up">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-4 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+              <Server className="w-3.5 h-3.5" />
+              <span>Infrastructure &amp; Engineering Deployments</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+              Featured <span className="text-gradient-cyan-purple">Projects</span>
+            </h2>
+            <p className="text-slate-300 text-base sm:text-lg">
+              Commercial CCTV &amp; NVR surveillance deployments, high-performance custom PC workstation builds, and certified T568B structured network cabling.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-            Featured <span className="text-gradient-cyan-purple">Projects</span>
-          </h2>
-          <p className="text-slate-300 text-base sm:text-lg">
-            Commercial CCTV &amp; NVR surveillance deployments, high-performance custom PC workstation builds, and certified T568B structured network cabling.
-          </p>
-        </div>
+        </ScrollReveal>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap justify-center items-center gap-2 mb-12">
-          {categories.map((cat) => {
-            const isActive = activeFilter === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-cyan-300 border border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.25)]"
-                    : "glass-panel text-slate-400 hover:text-white hover:border-slate-700"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
+        <ScrollReveal direction="up" delayMs={100}>
+          <div className="flex flex-wrap justify-center items-center gap-2 mb-12">
+            {categories.map((cat) => {
+              const isActive = activeFilter === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveFilter(cat)}
+                  className={`btn-click px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-cyan-300 border border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.25)] scale-[1.03]"
+                      : "glass-panel text-slate-400 hover:text-white hover:border-slate-700"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="glass-panel rounded-2xl p-6 sm:p-7 border border-white/10 hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(0,240,255,0.2)] transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
-            >
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.map((project) => (
+              <div
+                key={project.id}
+                className="glass-panel card-shine rounded-2xl p-6 sm:p-7 border border-white/10 hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(0,240,255,0.25)] transition-all duration-300 flex flex-col justify-between group hover:-translate-y-2"
+              >
               <div>
                 {/* Header: Category Badge & Metrics */}
                 <div className="flex items-center justify-between gap-2 mb-4">
@@ -165,7 +169,7 @@ export default function Projects() {
                   <button
                     type="button"
                     onClick={() => setSelectedProject(project)}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-800/60 hover:border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all group/btn"
+                    className="btn-click w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-800/60 hover:border-cyan-400/50 shadow-[0_0_15px_rgba(0,240,255,0.15)] transition-all group/btn cursor-pointer"
                   >
                     <Info className="w-3.5 h-3.5 text-cyan-400 group-hover/btn:scale-110 transition-transform" />
                     <span>View Technical Specifications &amp; Setup</span>
@@ -175,6 +179,7 @@ export default function Projects() {
             </div>
           ))}
         </div>
+        </ScrollReveal>
 
         {/* Architectural / Technical Specifications Modal */}
         {selectedProject && (
