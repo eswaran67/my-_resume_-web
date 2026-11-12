@@ -10,14 +10,10 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import ClickEffects from "@/components/ClickEffects";
-import ScrollProgress from "@/components/ScrollProgress";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#07090e] text-slate-100 overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
-      {/* Top Cyber Laser Scroll Progress Indicator */}
-      <ScrollProgress />
-
       {/* Interactive Cursor Spotlight & Click Physics */}
       <CursorGlow />
       <ClickEffects />
