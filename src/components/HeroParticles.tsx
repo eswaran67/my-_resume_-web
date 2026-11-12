@@ -5,14 +5,17 @@ import React, { useEffect, useRef } from "react";
 interface Particle {
   x: number;
   y: number;
+  originX: number;
+  originY: number;
   vx: number;
   vy: number;
   radius: number;
   color: string;
   baseAlpha: number;
+  isForeground: boolean;
 }
 
-const PARTICLE_COLORS = [
+const FG_COLORS = [
   "rgba(0, 240, 255, ",
   "rgba(56, 189, 248, ",
   "rgba(168, 85, 247, ",
@@ -34,7 +37,7 @@ export default function HeroParticles() {
     let width = (canvas.width = container.offsetWidth);
     let height = (canvas.height = container.offsetHeight);
 
-    const mouse = { x: -1000, y: -1000, radius: 140 };
+    const mouse = { x: -1000, y: -1000, radius: 170 };
     let animationFrameId: number;
     let isVisible = true;
 
@@ -48,7 +51,6 @@ export default function HeroParticles() {
 
     window.addEventListener("resize", handleResize);
 
-    // Mouse tracker relative to container
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
@@ -75,20 +77,26 @@ export default function HeroParticles() {
     );
     observer.observe(container);
 
-    // Particle pool
+    // Particle pool with 3D Depth layers
     let particles: Particle[] = [];
     const initParticles = () => {
-      const count = Math.min(Math.floor((width * height) / 18000), 55);
+      const count = Math.min(Math.floor((width * height) / 14000), 65);
       particles = [];
       for (let i = 0; i < count; i++) {
+        const isFg = i % 2 === 0;
+        const x = Math.random() * width;
+        const y = Math.random() * height;
         particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.65,
-          vy: (Math.random() - 0.5) * 0.65,
-          radius: Math.random() * 2 + 1,
-          color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-          baseAlpha: Math.random() * 0.5 + 0.3,
+          x,
+          y,
+          originX: x,
+          originY: y,
+          vx: (Math.random() - 0.5) * (isFg ? 0.7 : 0.35),
+          vy: (Math.random() - 0.5) * (isFg ? 0.7 : 0.35),
+          radius: isFg ? Math.random() * 1.8 + 1.2 : Math.random() * 0.9 + 0.6,
+          color: FG_COLORS[Math.floor(Math.random() * FG_COLORS.length)],
+          baseAlpha: isFg ? Math.random() * 0.4 + 0.45 : Math.random() * 0.25 + 0.15,
+          isForeground: isFg,
         });
       }
     };
@@ -100,7 +108,35 @@ export default function HeroParticles() {
       if (!isVisible) return;
       ctx.clearRect(0, 0, width, height);
 
-      // Update and draw particles
+      // 1. Inter-particle Constellation Connections
+      const maxConnectDist = 115;
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        if (!p1.isForeground) continue;
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          if (!p2.isForeground) continue;
+
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < maxConnectDist) {
+            const alpha = (1 - dist / maxConnectDist) * 0.22;
+            ctx.save();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }
+
+      // 2. Update and draw individual particles + mouse magnetic lines
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
@@ -108,54 +144,47 @@ export default function HeroParticles() {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Bounce on boundaries
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+        // Wrap around boundaries
+        if (p.x < -10) p.x = width + 10;
+        if (p.x > width + 10) p.x = -10;
+        if (p.y < -10) p.y = height + 10;
+        if (p.y > height + 10) p.y = -10;
 
-        // Mouse interaction (gentle attraction / magnetic push)
+        // Mouse interaction (Smooth magnetic push/pull)
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < mouse.radius) {
-          const force = (1 - dist / mouse.radius) * 1.5;
+        if (dist < mouse.radius && p.isForeground) {
+          const force = (1 - dist / mouse.radius) * 2.2;
           p.x -= (dx / dist) * force;
           p.y -= (dy / dist) * force;
 
-          // Draw laser line to mouse
-          ctx.strokeStyle = `rgba(0, 240, 255, ${0.45 * (1 - dist / mouse.radius)})`;
+          // Connect laser line to mouse
+          const lineAlpha = (1 - dist / mouse.radius) * 0.45;
+          ctx.save();
+          ctx.strokeStyle = `rgba(0, 240, 255, ${lineAlpha})`;
+          ctx.shadowColor = "#00f0ff";
+          ctx.shadowBlur = 8;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
           ctx.stroke();
+          ctx.restore();
         }
 
         // Draw particle dot with glow
+        ctx.save();
         ctx.fillStyle = `${p.color}${p.baseAlpha})`;
-        ctx.shadowColor = "#00f0ff";
-        ctx.shadowBlur = 6;
+        if (p.isForeground) {
+          ctx.shadowColor = "#00f0ff";
+          ctx.shadowBlur = 8;
+        }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 0;
-
-        // Connect nearby particles
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
-          const maxDist = 110;
-
-          if (dist2 < maxDist) {
-            const alpha = (1 - dist2 / maxDist) * 0.22;
-            ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
-          }
-        }
+        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(loop);
@@ -168,17 +197,19 @@ export default function HeroParticles() {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
       observer.disconnect();
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-auto z-0 overflow-hidden"
       aria-hidden="true"
+      className="absolute inset-0 pointer-events-auto overflow-hidden z-0"
     >
-      <canvas ref={canvasRef} className="w-full h-full opacity-65" />
+      <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
 }

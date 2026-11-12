@@ -11,6 +11,7 @@ interface Spark {
   size: number;
   color: string;
   alpha: number;
+  decay: number;
 }
 
 interface Ripple {
@@ -18,9 +19,22 @@ interface Ripple {
   x: number;
   y: number;
   color: string;
+  secondaryColor: string;
 }
 
-const COLORS = ["#00f0ff", "#38bdf8", "#a855f7", "#c084fc", "#34d399"];
+const PALETTE = [
+  { primary: "#00f0ff", secondary: "#a855f7" },
+  { primary: "#38bdf8", secondary: "#c084fc" },
+  { primary: "#22d3ee", secondary: "#818cf8" },
+];
+
+const SPARK_COLORS = [
+  "#ffffff", // White-hot core
+  "#00f0ff", // Electric cyan
+  "#38bdf8", // Sky blue
+  "#c084fc", // Purple neon
+  "#a855f7", // Deep violet
+];
 
 export default function ClickEffects() {
   const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -29,7 +43,6 @@ export default function ClickEffects() {
   const animFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Only run on client with fine pointer or touch
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -51,8 +64,10 @@ export default function ClickEffects() {
         const s = sparks[i];
         s.x += s.vx;
         s.y += s.vy;
-        s.vy += 0.08; // subtle gravity
-        s.alpha -= 0.025; // fade out
+        s.vx *= 0.95; // air drag
+        s.vy *= 0.95;
+        s.vy += 0.09; // subtle gravity
+        s.alpha -= s.decay;
 
         if (s.alpha <= 0) {
           sparks.splice(i, 1);
@@ -63,9 +78,9 @@ export default function ClickEffects() {
         ctx.globalAlpha = Math.max(0, s.alpha);
         ctx.fillStyle = s.color;
         ctx.shadowColor = s.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.arc(s.x, s.y, s.size * (s.alpha > 0.5 ? 1 : s.alpha * 2), 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -78,37 +93,41 @@ export default function ClickEffects() {
     };
 
     const handlePointerDown = (e: PointerEvent) => {
-      // Don't trigger if right-click
+      // Don't trigger on secondary click
       if (e.button !== 0 && e.button !== undefined && e.pointerType === "mouse") {
         if (e.button !== 0) return;
       }
 
       const x = e.clientX;
       const y = e.clientY;
-      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const chosen = PALETTE[Math.floor(Math.random() * PALETTE.length)];
 
-      // 1. Create expanding neon ripple
+      // 1. Dual Shockwave Rings
       const rippleId = Date.now() + Math.random();
-      setRipples((prev) => [...prev.slice(-8), { id: rippleId, x, y, color }]);
+      setRipples((prev) => [
+        ...prev.slice(-6),
+        { id: rippleId, x, y, color: chosen.primary, secondaryColor: chosen.secondary },
+      ]);
 
       setTimeout(() => {
         setRipples((prev) => prev.filter((r) => r.id !== rippleId));
-      }, 700);
+      }, 750);
 
-      // 2. Create burst of micro-sparks
-      const sparkCount = 6;
+      // 2. High-Velocity Micro Sparks with White-Hot Core
+      const sparkCount = 12;
       for (let i = 0; i < sparkCount; i++) {
-        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.8;
-        const speed = 2 + Math.random() * 3.5;
+        const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5) * 0.7;
+        const speed = 2.5 + Math.random() * 4.5;
         sparksRef.current.push({
           id: Math.random(),
           x,
           y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          size: 1.5 + Math.random() * 2,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          size: Math.random() * 2 + 1.2,
+          color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
           alpha: 1,
+          decay: 0.02 + Math.random() * 0.02,
         });
       }
 
@@ -122,34 +141,51 @@ export default function ClickEffects() {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("pointerdown", handlePointerDown);
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
-      {/* Canvas for micro-sparks burst */}
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-[9998]"
+      {/* HTML Expanding Dual Ripple Waves */}
+      <div
         aria-hidden="true"
-      />
-
-      {/* DOM Ripples */}
-      <div className="fixed inset-0 pointer-events-none z-[9997] overflow-hidden" aria-hidden="true">
-        {ripples.map((r) => (
-          <span
-            key={r.id}
-            className="absolute rounded-full pointer-events-none animate-ripple-burst -translate-x-1/2 -translate-y-1/2"
-            style={{
-              left: r.x,
-              top: r.y,
-              borderColor: r.color,
-              boxShadow: `0 0 20px ${r.color}, inset 0 0 15px ${r.color}`,
-            }}
-          />
+        className="fixed inset-0 pointer-events-none z-[9995] overflow-hidden select-none"
+      >
+        {ripples.map((ripple) => (
+          <React.Fragment key={ripple.id}>
+            {/* Primary Ring */}
+            <span
+              className="absolute rounded-full -translate-x-1/2 -translate-y-1/2 animate-ripple-burst"
+              style={{
+                left: `${ripple.x}px`,
+                top: `${ripple.y}px`,
+                borderColor: ripple.color,
+                boxShadow: `0 0 16px ${ripple.color}, inset 0 0 10px ${ripple.color}`,
+              }}
+            />
+            {/* Secondary Harmonic Echo Ring */}
+            <span
+              className="absolute rounded-full -translate-x-1/2 -translate-y-1/2 animate-ripple-echo"
+              style={{
+                left: `${ripple.x}px`,
+                top: `${ripple.y}px`,
+                borderColor: ripple.secondaryColor,
+                boxShadow: `0 0 20px ${ripple.secondaryColor}`,
+              }}
+            />
+          </React.Fragment>
         ))}
       </div>
+
+      {/* Canvas for High-Performance Physics Sparks */}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none z-[9996]"
+      />
     </>
   );
 }
