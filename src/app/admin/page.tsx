@@ -16,9 +16,17 @@ export default function AdminLoginPage() {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Clear legacy permanent storage so closing the website always locks Owner Mode
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("eswaran_owner_pin");
+      } catch (e) {}
+    }
+
     const savedPin =
-      localStorage.getItem("eswaran_owner_pin") ||
-      sessionStorage.getItem("eswaran_owner_pin");
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("eswaran_owner_pin")
+        : null;
     if (savedPin && VALID_PINS.includes(savedPin.toLowerCase())) {
       setAlreadyLoggedIn(true);
     }
@@ -31,8 +39,9 @@ export default function AdminLoginPage() {
     const normalized = pin.trim().toLowerCase();
     if (VALID_PINS.includes(normalized)) {
       const canonicalPin = normalized === "1234" ? "1234" : normalized === "admin" ? "admin" : "2026";
-      localStorage.setItem("eswaran_owner_pin", canonicalPin);
+      // Use sessionStorage ONLY so closing website locks owner mode
       sessionStorage.setItem("eswaran_owner_pin", canonicalPin);
+      localStorage.removeItem("eswaran_owner_pin");
       setSuccess(true);
       setTimeout(() => {
         router.push("/#contact");
@@ -43,8 +52,8 @@ export default function AdminLoginPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("eswaran_owner_pin");
     sessionStorage.removeItem("eswaran_owner_pin");
+    localStorage.removeItem("eswaran_owner_pin");
     setAlreadyLoggedIn(false);
   };
 

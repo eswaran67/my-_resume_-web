@@ -44,12 +44,20 @@ export default function ResumeSection() {
 
   const resumeUrl = "/documents/eswaran-resume.pdf";
 
-  // Check Owner status on mount and listen to custom event
+  // Check Owner status on mount and listen to custom event (auto-locks on tab/browser close)
   useEffect(() => {
+    // Clear legacy permanent storage so closing the website always locks Owner Mode
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("eswaran_owner_pin");
+      } catch (e) {}
+    }
+
     const checkOwner = () => {
       const savedPin =
-        localStorage.getItem("eswaran_owner_pin") ||
-        sessionStorage.getItem("eswaran_owner_pin");
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("eswaran_owner_pin")
+          : null;
       setIsOwner(!!(savedPin && VALID_PINS.includes(savedPin.toLowerCase())));
     };
 
@@ -60,8 +68,8 @@ export default function ResumeSection() {
 
   // Lock Owner Mode
   const handleLockOwnerMode = () => {
-    localStorage.removeItem("eswaran_owner_pin");
     sessionStorage.removeItem("eswaran_owner_pin");
+    localStorage.removeItem("eswaran_owner_pin");
     setIsOwner(false);
     window.dispatchEvent(new Event("owner-mode-changed"));
   };
@@ -92,8 +100,9 @@ export default function ResumeSection() {
     if (VALID_PINS.includes(normalized)) {
       const canonical = normalized === "1234" ? "1234" : "2026";
       setIsOwner(true);
-      localStorage.setItem("eswaran_owner_pin", canonical);
+      // Use sessionStorage ONLY so closing website locks owner mode
       sessionStorage.setItem("eswaran_owner_pin", canonical);
+      localStorage.removeItem("eswaran_owner_pin");
       window.dispatchEvent(new Event("owner-mode-changed"));
       setShowPinPrompt(false);
       setEnteredPin("");
@@ -115,8 +124,9 @@ export default function ResumeSection() {
     setUploadError("");
 
     const pin =
-      localStorage.getItem("eswaran_owner_pin") ||
-      sessionStorage.getItem("eswaran_owner_pin") ||
+      (typeof window !== "undefined"
+        ? sessionStorage.getItem("eswaran_owner_pin")
+        : null) ||
       "2026";
 
     try {

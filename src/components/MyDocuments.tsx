@@ -110,14 +110,25 @@ export default function MyDocuments() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Check persistent storage and URL parameters on mount
+  // Check session storage on mount (locks automatically when website/tab is closed)
   useEffect(() => {
+    // Clear legacy permanent storage so closing the website always locks Owner Mode
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem("eswaran_owner_pin");
+      } catch (e) {}
+    }
+
     const savedPin =
-      localStorage.getItem("eswaran_owner_pin") ||
-      sessionStorage.getItem("eswaran_owner_pin");
-    if (savedPin) {
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("eswaran_owner_pin")
+        : null;
+    if (savedPin && VALID_KEYS.includes(savedPin.toLowerCase())) {
       setIsOwner(true);
       setStoredPin(savedPin);
+    } else {
+      setIsOwner(false);
+      setStoredPin("");
     }
 
     if (typeof window !== "undefined") {
@@ -135,10 +146,12 @@ export default function MyDocuments() {
 
     const handleOwnerChange = () => {
       const pin =
-        localStorage.getItem("eswaran_owner_pin") ||
-        sessionStorage.getItem("eswaran_owner_pin");
+        typeof window !== "undefined"
+          ? sessionStorage.getItem("eswaran_owner_pin")
+          : null;
       setIsOwner(!!(pin && VALID_KEYS.includes(pin.toLowerCase())));
       if (pin) setStoredPin(pin);
+      else setStoredPin("");
     };
 
     window.addEventListener("owner-mode-changed", handleOwnerChange);
@@ -203,9 +216,9 @@ export default function MyDocuments() {
       const canonical = normalized === "1234" ? "1234" : "2026";
       setIsOwner(true);
       setStoredPin(canonical);
-      // Persist in localStorage so Eswaran stays logged in on his own device
-      localStorage.setItem("eswaran_owner_pin", canonical);
+      // Use sessionStorage ONLY so closing the browser/website immediately locks Owner Mode
       sessionStorage.setItem("eswaran_owner_pin", canonical);
+      localStorage.removeItem("eswaran_owner_pin");
       window.dispatchEvent(new Event("owner-mode-changed"));
       setShowPinModal(false);
       setEnteredPin("");
@@ -313,8 +326,9 @@ export default function MyDocuments() {
     try {
       const activePin =
         storedPin ||
-        localStorage.getItem("eswaran_owner_pin") ||
-        sessionStorage.getItem("eswaran_owner_pin") ||
+        (typeof window !== "undefined"
+          ? sessionStorage.getItem("eswaran_owner_pin")
+          : null) ||
         "2026";
 
       const formData = new FormData();
